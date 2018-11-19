@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ApngDrawable</string>
+    <string name="load">Load</string>
+    <string name="stop">Stop</string>
+    <string name="start">Start</string>
+    <string name="load_with_size">Load (with size)</string>
+    <string name="image_1">Image 1</string>
+    <string name="image_2">Image 2</string>
+    <string name="load_5x">Load (5x)</string>
+    <string name="load_10x">Load (10x)</string>
+    <string name="commands">Commands</string>
+    <string name="use_inputstream">Use InputStream</string>
+    <string name="normal_png">Normal PNG</string>
+    <string name="not_apng">Not APNG</string>
+    <string name="jpeg">JPEG</string>
+    <string name="run_gc">Run GC</string>
+</resources>
