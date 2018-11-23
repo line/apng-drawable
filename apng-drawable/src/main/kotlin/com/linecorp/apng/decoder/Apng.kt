@@ -21,6 +21,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Build
+import android.os.Trace
 import android.util.Log
 import androidx.annotation.IntRange
 import com.linecorp.apng.BuildConfig
@@ -72,7 +73,9 @@ internal class Apng(
         }
 
     init {
+        Trace.beginSection("Apng#draw")
         ApngDecoderJni.draw(id, 0, bitmap)
+        Trace.endSection()
     }
 
     val isRecycled: Boolean
@@ -101,7 +104,9 @@ internal class Apng(
      * or error code if any error has happened while the drawing process.
      */
     fun drawWithIndex(frameIndex: Int, canvas: Canvas, src: Rect?, dst: Rect, paint: Paint): Int {
+        Trace.beginSection("Apng#draw")
         val result = ApngDecoderJni.draw(id, frameIndex, bitmap)
+        Trace.endSection()
         canvas.drawBitmap(bitmap, src, dst, paint)
         return result
     }
@@ -129,10 +134,13 @@ internal class Apng(
         @Throws(ApngException::class)
         fun decode(stream: InputStream): Apng {
             val result = DecodeResult()
+            Trace.beginSection("Apng#decode")
             val id = try {
                 ApngDecoderJni.decode(stream, result)
             } catch (e: Throwable) {
                 throw ApngException(e)
+            } finally {
+	        Trace.endSection()
             }
             throwIfError(id)
             try {
