@@ -23,7 +23,7 @@ ApngDrawable follows [Kotlin coding conventions](http://kotlinlang.org/docs/refe
 
 Here is an example.
 
-```
+```kotlin
 class Klass(val parameter: Value) {
 
     // Read-only properties

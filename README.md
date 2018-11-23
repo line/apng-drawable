@@ -13,7 +13,7 @@ TBA
 
 You can decode from a lot of source types, e.g. File, InputStream and Resources.
 
-```
+```kotlin
 // Decode from File
 val drawable1 = ApngDrawable.decode(File("path/to/file"))
 
