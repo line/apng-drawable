@@ -6,9 +6,14 @@ print_help_and_exit () {
     cat <<EOF
 usage: ./`basename $0` <libpng_version>
 Downloads libpng source code and applies apng supporting patch.
+If you want to use the project specified version, run "cat libpng_version | xargs ./`basename $0`".
 EOF
     exit
 }
+
+if [ $# -ne 1 ]; then
+  print_help_and_exit
+fi
 
 case "$1" in
   -h|-?|--help)
@@ -16,11 +21,8 @@ case "$1" in
     exit
     ;;
 esac
-if [ -n "$1" ]; then
-  LIBPNG_VERSION="$1"
-else
-  print_help_and_exit
-fi
+
+LIBPNG_VERSION="$1"
 
 echo libpng version = ${LIBPNG_VERSION}
 LIBPNG_VERSION_MAJOR=${LIBPNG_VERSION%%.*}
