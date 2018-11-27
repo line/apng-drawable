@@ -28,6 +28,17 @@ val drawable3 = ApngDrawable.decode(context.resources, R.raw.apng_image)
 
 You can find a more advanced way of using the library from the [example](https://github.com/line/apng-drawable/tree/master/sample-app).
 
+## How to build
+
+The patched `libpng` sources aren't included in the repository.
+You need to download `libpng` and apply APNG patch first.
+
+```sh
+$ cat libpng_version | xargs ./download_libpng_and_apply_apng_patch.sh
+$ ./gradlew :sample-app:assembleDebug
+```
+
+
 ## How to contribute to ApngDrawable
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
