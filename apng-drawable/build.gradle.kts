@@ -10,12 +10,9 @@ plugins {
 
 android {
     defaultConfig {
-        val minSdkVersion: Int by rootProject.extra
-        val compileSdkVersion: Int by rootProject.extra
-        val targetSdkVersion: Int by rootProject.extra
-        minSdkVersion(minSdkVersion)
-        compileSdkVersion(compileSdkVersion)
-        targetSdkVersion(targetSdkVersion)
+        minSdkVersion(Versions.minSdkVersion)
+        compileSdkVersion(Versions.compileSdkVersion)
+        targetSdkVersion(Versions.targetSdkVersion)
         versionName = project.properties["apng_drawable.version"]!!.toString()
         version = project.properties["apng_drawable.version"]!!
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -82,17 +79,11 @@ tasks.withType(DokkaAndroidTask::class.java) {
 
 
 dependencies {
-    val androidxVersion: String by rootProject.extra
-    val junitVersion: String by rootProject.extra
-    val robolectricVersion: String by rootProject.extra
-    val mockitoVersion: String by rootProject.extra
-    val mockitoKotlinVersion: String by rootProject.extra
-
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
-    implementation("androidx.annotation", "annotation", androidxVersion)
+    implementation(Libs.androidxAppcompat)
 
-    testImplementation("junit", "junit", junitVersion)
-    testImplementation("org.robolectric", "robolectric", robolectricVersion)
-    testImplementation("org.mockito", "mockito-inline", mockitoVersion)
-    testImplementation("com.nhaarman.mockitokotlin2", "mockito-kotlin", mockitoKotlinVersion)
+    testImplementation(Libs.junit)
+    testImplementation(Libs.robolectric)
+    testImplementation(Libs.mockitoInline)
+    testImplementation(Libs.mockitoKotlin)
 }
