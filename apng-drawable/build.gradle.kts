@@ -80,7 +80,7 @@ tasks.withType(DokkaAndroidTask::class.java) {
 
 dependencies {
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
-    implementation(Libs.androidxAppcompat)
+    implementation(Libs.androidxAnnotation)
 
     testImplementation(Libs.junit)
     testImplementation(Libs.robolectric)
