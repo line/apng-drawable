@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion(28)
+    compileSdkVersion(Versions.compileSdkVersion)
     defaultConfig {
         applicationId = "com.linecorp.apngsample"
-        minSdkVersion(19)
-        targetSdkVersion(28)
+        minSdkVersion(Versions.minSdkVersion)
+        targetSdkVersion(Versions.targetSdkVersion)
         versionCode = 1
         versionName = "1.0"
         missingDimensionStrategy("env", "androidx")
@@ -35,8 +35,8 @@ android {
 
 dependencies {
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
-    implementation("androidx.appcompat:appcompat:1.0.0")
-    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
+    implementation(Libs.androidxAppcompat)
+    implementation(Libs.androidxConstraintLayout)
 
     implementation(project(":apng-drawable"))
 }
