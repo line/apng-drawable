@@ -3,7 +3,7 @@ object Versions {
     const val kotlinVersion = "1.3.0"
 
     // Plugin
-    const val androidPluginVersion = "3.3.0-beta04"
+    const val androidPluginVersion = "3.3.0-rc01"
     const val ktlintGradleVersion = "6.2.0"
     const val dokkaVersion = "0.9.17"
 
@@ -17,8 +17,8 @@ object Versions {
     const val androidxConstraintLayoutVersion = "1.1.3"
     const val junitVersion = "4.12"
     const val robolectricVersion = "3.8"
-    const val mockitoVersion = "2.22.0"
-    const val mockitoKotlinVersion = "2.0.0-RC2"
+    const val mockitoVersion = "2.23.4"
+    const val mockitoKotlinVersion = "2.0.0"
 }
 
 object Libs {
