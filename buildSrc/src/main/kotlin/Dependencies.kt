@@ -23,6 +23,7 @@ object Versions {
 
 object Libs {
     val androidxAppcompat = "androidx.appcompat:appcompat:${Versions.androidxVersion}"
+    val androidxAnnotation = "androidx.annotation:annotation:${Versions.androidxVersion}"
     val androidxConstraintLayout =
         "androidx.constraintlayout:constraintlayout:${Versions.androidxConstraintLayoutVersion}"
     val junit = "junit:junit:${Versions.junitVersion}"
