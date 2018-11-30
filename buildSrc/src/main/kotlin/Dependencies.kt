@@ -4,7 +4,7 @@ object Versions {
 
     // Plugin
     const val androidPluginVersion = "3.3.0-rc01"
-    const val ktlintGradleVersion = "6.2.0"
+    const val ktlintGradleVersion = "6.3.0"
     const val dokkaVersion = "0.9.17"
 
     // Android

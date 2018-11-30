@@ -9,7 +9,7 @@ buildscript {
         classpath(kotlin("gradle-plugin", version = Versions.kotlinVersion))
         classpath("org.jetbrains.dokka", "dokka-android-gradle-plugin", Versions.dokkaVersion)
         classpath(
-            "gradle.plugin.org.jlleitschuh.gradle",
+            "org.jlleitschuh.gradle",
             "ktlint-gradle",
             Versions.ktlintGradleVersion
         )
