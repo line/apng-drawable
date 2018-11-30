@@ -1,5 +1,7 @@
 import org.jetbrains.dokka.gradle.DokkaAndroidTask
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     id("com.android.library")
@@ -65,6 +67,12 @@ android {
             setPath("src/main/cpp/CMakeLists.txt")
         }
     }
+}
+
+configure<KtlintExtension> {
+    android.set(true)
+    reporters.set(setOf(ReporterType.CHECKSTYLE))
+    ignoreFailures.set(true)
 }
 
 tasks.withType(DokkaAndroidTask::class.java) {
