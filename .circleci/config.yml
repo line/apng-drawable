@@ -1,0 +1,100 @@
+version: 2
+
+defaults: &defaults
+  working_directory: ~/code
+  docker:
+  - image: circleci/android:api-28-ndk-r17b
+  environment:
+    JVM_OPTS: -Xmx4000m
+
+jobs:
+  build:
+    <<: *defaults
+    steps:
+    - checkout
+    - restore_cache:
+        key: jars-{{ checksum  "buildSrc/src/main/kotlin/Dependencies.kt" }}
+    - run:
+        name: Download Dependencies
+        command: ./gradlew androidDependencies
+    - save_cache:
+        paths:
+        - ~/.gradle
+        key: jars-{{ checksum  "buildSrc/src/main/kotlin/Dependencies.kt" }}
+    - restore_cache:
+        key: libpng--{{ checksum  "libpng_version" }}
+    - run:
+        name: Prepare libpng
+        command: cat libpng_version | xargs ./download_libpng_and_apply_apng_patch.sh
+    - save_cache:
+        paths:
+        - apng-drawable/src/main/cpp/libpng
+        key: libpng--{{ checksum  "libpng_version" }}
+    - run:
+        name: Build
+        command: |
+          ./gradlew :apng-drawable:assembleDebug
+    - run:
+        name: Test and lint
+        command: |
+          ./gradlew :apng-drawable:testDebugUnitTest :apng-drawable:lintDebug :apng-drawable:ktlintCheck
+    - store_test_results:
+        path: apng-drawable/build/test-results
+    - persist_to_workspace:
+        root: ~/code
+        paths:
+        - .
+
+  check:
+    working_directory: ~/code
+    docker:
+    - image: circleci/ruby:2.5.3
+    steps:
+    - attach_workspace:
+        at: ~/code
+    - restore_cache:
+        key: gems-{{ checksum "Gemfile.lock" }}
+    - run: bundle install --path vendor/bundle
+    - run:
+        name: Run danger
+        command: bundle exec danger
+    - run:
+        name: Move artifacts
+        command: |
+          ARTIFACTS="/tmp/circle_artifacts"
+          mkdir -p "$ARTIFACTS"
+          cp -rv "apng-drawable/build/reports/" "$ARTIFACTS/"
+    - save_cache:
+        paths:
+        - vendor/bundle
+        key: gems-{{ checksum "Gemfile.lock" }}
+    - store_artifacts:
+        path: "/tmp/circle_artifacts"
+
+  deploy:
+    <<: *defaults
+    steps:
+    - attach_workspace:
+        at: ~/code
+    - run:
+        name: Build apk
+        command: ./gradlew :apng-drawable:assembleRelease
+    - store_artifacts:
+        path: apng-drawable/build/outputs/aar/apng-drawable-release.aar
+        destination: apng-drawable-release.aar
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+    - build
+    - check:
+        requires:
+        - build
+    - deploy:
+        requires:
+        - build
+        - check
+        filters:
+          branches:
+            only: release
