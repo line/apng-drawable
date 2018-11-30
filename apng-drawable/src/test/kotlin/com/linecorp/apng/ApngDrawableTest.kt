@@ -31,11 +31,13 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 /**
  * Test for [ApngDrawable].
  */
 @RunWith(RobolectricTestRunner::class)
+@Config(manifest = Config.NONE)
 class ApngDrawableTest {
 
     @Mock
