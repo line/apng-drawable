@@ -67,6 +67,9 @@ android {
             setPath("src/main/cpp/CMakeLists.txt")
         }
     }
+    lintOptions {
+        xmlReport = true
+    }
 }
 
 configure<KtlintExtension> {
