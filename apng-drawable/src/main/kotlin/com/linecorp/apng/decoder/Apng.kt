@@ -140,7 +140,7 @@ internal class Apng(
             } catch (e: Throwable) {
                 throw ApngException(e)
             } finally {
-	        Trace.endSection()
+                Trace.endSection()
             }
             throwIfError(id)
             try {
