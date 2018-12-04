@@ -6,6 +6,8 @@ object Versions {
     const val androidPluginVersion = "3.3.0-rc01"
     const val ktlintGradleVersion = "6.3.0"
     const val dokkaVersion = "0.9.17"
+    const val bintrayGradlePluginVersion = "1.8.4"
+    const val androidMavenGradlePluginVersion = "2.1"
 
     // Android
     const val minSdkVersion = 19
@@ -22,6 +24,17 @@ object Versions {
 }
 
 object Libs {
+    // Plugin
+    val androidGradlePlugin = "com.android.tools.build:gradle:${Versions.androidPluginVersion}"
+    val dokkaAndroidGradlePlugin =
+        "org.jetbrains.dokka:dokka-android-gradle-plugin:${Versions.dokkaVersion}"
+    val ktlintGradlePlugin = "org.jlleitschuh.gradle:ktlint-gradle:${Versions.ktlintGradleVersion}"
+    val bintrayGradlePlugin =
+        "com.jfrog.bintray.gradle:gradle-bintray-plugin:${Versions.bintrayGradlePluginVersion}"
+    val androidManvenGradlePlugin =
+        "com.github.dcendents:android-maven-gradle-plugin:${Versions.androidMavenGradlePluginVersion}"
+
+    // Library
     val androidxAppcompat = "androidx.appcompat:appcompat:${Versions.androidxVersion}"
     val androidxAnnotation = "androidx.annotation:annotation:${Versions.androidxVersion}"
     val androidxConstraintLayout =
