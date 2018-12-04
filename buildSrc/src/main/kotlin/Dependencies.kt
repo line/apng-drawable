@@ -22,6 +22,13 @@ object Versions {
 }
 
 object Libs {
+    // Plugin
+    val androidGradlePlugin = "com.android.tools.build:gradle:${Versions.androidPluginVersion}"
+    val dokkaAndroidGradlePlugin =
+        "org.jetbrains.dokka:dokka-android-gradle-plugin:${Versions.dokkaVersion}"
+    val ktlintGradlePlugin = "org.jlleitschuh.gradle:ktlint-gradle:${Versions.ktlintGradleVersion}"
+
+    // Library
     val androidxAppcompat = "androidx.appcompat:appcompat:${Versions.androidxVersion}"
     val androidxAnnotation = "androidx.annotation:annotation:${Versions.androidxVersion}"
     val androidxConstraintLayout =
