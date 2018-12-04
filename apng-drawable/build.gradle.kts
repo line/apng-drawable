@@ -47,8 +47,8 @@ android {
             }
         }
         getByName("release") {
-            isMinifyEnabled = true
-            isUseProguard = true
+            isMinifyEnabled = false
+            isUseProguard = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android.txt"),
                 file("proguard-rules.pro")
