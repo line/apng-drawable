@@ -9,6 +9,8 @@ buildscript {
         classpath(kotlin("gradle-plugin", version = Versions.kotlinVersion))
         classpath(Libs.dokkaAndroidGradlePlugin)
         classpath(Libs.ktlintGradlePlugin)
+        classpath(Libs.bintrayGradlePlugin)
+        classpath(Libs.androidManvenGradlePlugin)
     }
 }
 
