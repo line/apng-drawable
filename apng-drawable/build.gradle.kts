@@ -15,8 +15,8 @@ android {
         minSdkVersion(Versions.minSdkVersion)
         compileSdkVersion(Versions.compileSdkVersion)
         targetSdkVersion(Versions.targetSdkVersion)
-        versionName = project.properties["apng_drawable.version"]!!.toString()
-        version = project.properties["apng_drawable.version"]!!
+        versionName = Consts.version
+        version = Consts.version
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles(
             file("proguard-rules.pro")
