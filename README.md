@@ -1,13 +1,44 @@
 # ApngDrawable
 
-![](https://img.shields.io/badge/Version-Now%20Distributing-blue.svg)
+[![Download](https://api.bintray.com/packages/line/apng-drawable/com.linecorp.apng/images/download.svg)](https://bintray.com/line/apng-drawable/com.linecorp.apng/_latestVersion)
 
 ApngDrawable is fast and light weight Animated Portable Network Graphics(APNG) image decoder library for Android platform.
 an Android library project that provides image trimming. ApngDrawable is written in Kotlin and C++.
 
 ## How to use
 
-TBA
+Use Gradle to build the library. Download it from [JCenter](https://bintray.com/bintray/jcenter) and add configurations in the `build.gradle` file as follows.
+
+```build.gradle
+// In your top-level project's `build.gradle`
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+// In your app project's `build.gradle`
+dependencies {
+  implementation 'com.linecorp:apng:x.y.z'
+}
+```
+
+If using Kotlin Gradle DSL, add configurations in the `build.gradle.kts` file as follows.
+
+```build.gradle.kts
+// In your top-level project's `build.gradle.kts`
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+// In your app project's `build.gradle.kts`
+dependencies {
+  implementation("com.linecorp:apng:x.y.z")
+}
+```
 
 ## Getting started
 
@@ -29,6 +60,8 @@ val drawable3 = ApngDrawable.decode(context.resources, R.raw.apng_image)
 You can find a more advanced way of using the library from the [example](https://github.com/line/apng-drawable/tree/master/sample-app).
 
 ## How to build
+
+Note: This operation is necessary when building from code. It's not necessary if you are reading using `implementation` as shown in "[How to use]".
 
 The patched `libpng` sources aren't included in the repository.
 You need to download `libpng` and apply APNG patch first.
