@@ -13,6 +13,7 @@ plugins {
     id("org.jetbrains.dokka-android")
     id("com.jfrog.bintray")
     id("com.github.dcendents.android-maven")
+    id("com.github.ben-manes.versions")
 }
 
 group = Consts.groupId

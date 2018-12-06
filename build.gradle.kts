@@ -11,6 +11,7 @@ buildscript {
         classpath(Libs.ktlintGradlePlugin)
         classpath(Libs.bintrayGradlePlugin)
         classpath(Libs.androidManvenGradlePlugin)
+        classpath(Libs.gradleVersionsPlugin)
     }
 }
 
