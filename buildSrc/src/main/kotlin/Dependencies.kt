@@ -16,7 +16,7 @@ object Versions {
     const val targetSdkVersion = 28
 
     // Library
-    const val androidxVersion = "1.0.0"
+    const val androidxVersion = "1.0.1"
     const val androidxConstraintLayoutVersion = "1.1.3"
     const val junitVersion = "4.12"
     const val robolectricVersion = "3.8"
