@@ -19,7 +19,7 @@ object Versions {
     const val androidxVersion = "1.0.1"
     const val androidxConstraintLayoutVersion = "1.1.3"
     const val junitVersion = "4.12"
-    const val robolectricVersion = "3.8"
+    const val robolectricVersion = "4.0.2"
     const val mockitoVersion = "2.23.4"
     const val mockitoKotlinVersion = "2.0.0"
 }
