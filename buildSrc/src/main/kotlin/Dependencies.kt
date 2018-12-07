@@ -8,6 +8,7 @@ object Versions {
     const val dokkaVersion = "0.9.17"
     const val bintrayGradlePluginVersion = "1.8.4"
     const val androidMavenGradlePluginVersion = "2.1"
+    const val gradleVersionsPluginVersion = "0.20.0"
 
     // Android
     const val minSdkVersion = 19
@@ -33,6 +34,8 @@ object Libs {
         "com.jfrog.bintray.gradle:gradle-bintray-plugin:${Versions.bintrayGradlePluginVersion}"
     val androidManvenGradlePlugin =
         "com.github.dcendents:android-maven-gradle-plugin:${Versions.androidMavenGradlePluginVersion}"
+    val gradleVersionsPlugin =
+        "com.github.ben-manes:gradle-versions-plugin:${Versions.gradleVersionsPluginVersion}"
 
     // Library
     val androidxAppcompat = "androidx.appcompat:appcompat:${Versions.androidxVersion}"
