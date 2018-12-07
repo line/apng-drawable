@@ -1,9 +1,9 @@
 object Versions {
     // Language
-    const val kotlinVersion = "1.3.10"
+    const val kotlinVersion = "1.3.11"
 
     // Plugin
-    const val androidPluginVersion = "3.3.0-rc01"
+    const val androidPluginVersion = "3.3.0-rc02"
     const val ktlintGradleVersion = "6.3.0"
     const val dokkaVersion = "0.9.17"
     const val bintrayGradlePluginVersion = "1.8.4"
@@ -16,10 +16,10 @@ object Versions {
     const val targetSdkVersion = 28
 
     // Library
-    const val androidxVersion = "1.0.0"
+    const val androidxVersion = "1.0.1"
     const val androidxConstraintLayoutVersion = "1.1.3"
     const val junitVersion = "4.12"
-    const val robolectricVersion = "3.8"
+    const val robolectricVersion = "4.0.2"
     const val mockitoVersion = "2.23.4"
     const val mockitoKotlinVersion = "2.0.0"
 }
