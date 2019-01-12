@@ -24,7 +24,6 @@ import android.graphics.ColorFilter
 import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.graphics.Rect
-import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
 import android.view.animation.AnimationUtils
@@ -33,6 +32,7 @@ import androidx.annotation.IntRange
 import androidx.annotation.RawRes
 import androidx.annotation.VisibleForTesting
 import androidx.annotation.WorkerThread
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import com.linecorp.apng.ApngDrawable.Companion.decode
 import com.linecorp.apng.decoder.Apng
 import com.linecorp.apng.decoder.ApngException
@@ -68,7 +68,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
      */
     val sourceDensity: Int = Bitmap.DENSITY_NONE,
     private val currentTimeProvider: () -> Long = { AnimationUtils.currentAnimationTimeMillis() }
-) : Drawable(), Animatable {
+) : Drawable(), Animatable2Compat {
 
     /**
      * The duration to animate one loop of APNG animation.
@@ -121,6 +121,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
 
     private val dstRect: Rect = Rect(0, 0, width, height)
     private val paint: Paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG)
+    private val animationCallbacks: MutableList<Animatable2Compat.AnimationCallback> = arrayListOf()
     private val currentRepeatCount: Int
         get() = (animationElapsedTimeMillis / durationMillis).toInt() + 1
     /**
@@ -183,12 +184,37 @@ class ApngDrawable @VisibleForTesting internal constructor(
         isStarted = true
         animationPrevDrawTimeMillis = null
         invalidateSelf()
+        animationCallbacks.forEach {
+            it.onAnimationStart(this)
+        }
     }
 
     override fun stop() {
         isStarted = false
         invalidateSelf()
     }
+
+    /**
+     * Adds [callback] to listen animation start and end event of this apng image.
+     * Animation end event will happen after exceeds [loopCount].
+     *
+     * **Note**:
+     * The animation end callback will be called only when animation stops beyond the loop count
+     * limit.
+     * In order to prevent potential memory leak, unregister the callback or clear all callbacks.
+     *
+     * @param callback The [Animatable2Compat.AnimationCallback] to notify events.
+     *
+     */
+    override fun registerAnimationCallback(callback: Animatable2Compat.AnimationCallback) {
+        animationCallbacks.add(callback)
+    }
+
+    override fun unregisterAnimationCallback(
+        callback: Animatable2Compat.AnimationCallback
+    ): Boolean = animationCallbacks.remove(callback)
+
+    override fun clearAnimationCallbacks() = animationCallbacks.clear()
 
     /**
      * Sets the density scale at which this drawable will be rendered.
@@ -202,7 +228,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
 
     /**
      * Releases resources managed by the native layer.
-     * Calls this image when it is no longer used.
+     * Call this image when it is no longer used.
      */
     fun recycle() = apng.recycle()
 
@@ -220,6 +246,9 @@ class ApngDrawable @VisibleForTesting internal constructor(
             animationElapsedTimeMillis = 0L
             animationPrevDrawTimeMillis = null
             isStarted = false
+            animationCallbacks.forEach {
+                it.onAnimationEnd(this)
+            }
         }
     }
 
