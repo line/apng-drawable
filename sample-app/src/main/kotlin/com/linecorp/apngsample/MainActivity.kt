@@ -17,10 +17,12 @@
 package com.linecorp.apngsample
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import com.linecorp.apng.ApngDrawable
 import kotlinx.android.synthetic.main.activity_main.button_gc
 import kotlinx.android.synthetic.main.activity_main.button_load_image_1
@@ -55,6 +57,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun startLoad(name: String, width: Int? = null, height: Int? = null) {
         //drawable?.recycle()
+        drawable?.clearAnimationCallbacks()
         drawable = null
         imageView.setImageDrawable(null)
         val isApng = assets.open(name).buffered().use {
@@ -63,6 +66,8 @@ class MainActivity : AppCompatActivity() {
         text_status.text = "isApng: $isApng"
         if (isApng) {
             drawable = ApngDrawable.decode(assets, name, width, height)
+            drawable?.loopCount = 5
+            drawable?.registerAnimationCallback(AnimationEventListener())
             drawable?.setTargetDensity(resources.displayMetrics)
             imageView.setImageDrawable(drawable)
             imageView.scaleType = ImageView.ScaleType.CENTER
@@ -80,5 +85,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun runGc() {
         System.gc()
+    }
+
+    private class AnimationEventListener : Animatable2Compat.AnimationCallback() {
+        override fun onAnimationStart(drawable: Drawable?) {
+            Log.d("apng", "Animation start")
+        }
+
+        override fun onAnimationEnd(drawable: Drawable?) {
+            Log.d("apng", "Animation end")
+        }
     }
 }

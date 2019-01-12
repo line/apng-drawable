@@ -98,6 +98,7 @@ tasks.withType(DokkaAndroidTask::class.java) {
 dependencies {
     api(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
     api(Libs.androidxAnnotation)
+    api(Libs.androidxVectorDrawable)
 
     testImplementation(Libs.junit)
     testImplementation(Libs.robolectric)
