@@ -18,6 +18,7 @@ object Versions {
     // Library
     const val androidxVersion = "1.0.1"
     const val androidxConstraintLayoutVersion = "1.1.3"
+    const val androidxAnimatedVectorDrawable = "1.0.0"
     const val junitVersion = "4.12"
     const val robolectricVersion = "4.0.2"
     const val mockitoVersion = "2.23.4"
@@ -40,6 +41,8 @@ object Libs {
     // Library
     val androidxAppcompat = "androidx.appcompat:appcompat:${Versions.androidxVersion}"
     val androidxAnnotation = "androidx.annotation:annotation:${Versions.androidxVersion}"
+    val androidxVectorDrawable =
+        "androidx.vectordrawable:vectordrawable-animated:${Versions.androidxAnimatedVectorDrawable}"
     val androidxConstraintLayout =
         "androidx.constraintlayout:constraintlayout:${Versions.androidxConstraintLayoutVersion}"
     val junit = "junit:junit:${Versions.junitVersion}"
