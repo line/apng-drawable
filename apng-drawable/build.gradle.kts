@@ -44,7 +44,7 @@ android {
         getByName("androidTest").java.srcDirs("src/androidTest/kotlin")
     }
     buildTypes {
-        getByName("debug") {
+        debug {
             isMinifyEnabled = false
             isUseProguard = false
             externalNativeBuild {
@@ -55,7 +55,7 @@ android {
                 }
             }
         }
-        getByName("release") {
+        release {
             isMinifyEnabled = false
             isUseProguard = false
             proguardFiles(
