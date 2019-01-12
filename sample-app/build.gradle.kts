@@ -20,11 +20,11 @@ android {
         getByName("main").java.srcDirs("src/main/kotlin")
     }
     buildTypes {
-        getByName("debug") {
+        debug {
             isMinifyEnabled = false
             applicationIdSuffix = ".debug"
         }
-        getByName("release") {
+        release {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android.txt"), file("proguard-rules.pro")

@@ -44,7 +44,7 @@ android {
         getByName("androidTest").java.srcDirs("src/androidTest/kotlin")
     }
     buildTypes {
-        getByName("debug") {
+        debug {
             isMinifyEnabled = false
             isUseProguard = false
             externalNativeBuild {
@@ -55,7 +55,7 @@ android {
                 }
             }
         }
-        getByName("release") {
+        release {
             isMinifyEnabled = false
             isUseProguard = false
             proguardFiles(
@@ -96,8 +96,8 @@ tasks.withType(DokkaAndroidTask::class.java) {
 
 
 dependencies {
-    implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
-    implementation(Libs.androidxAnnotation)
+    api(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
+    api(Libs.androidxAnnotation)
 
     testImplementation(Libs.junit)
     testImplementation(Libs.robolectric)
@@ -126,7 +126,7 @@ bintray {
 }
 
 val sourcesJarTask = tasks.create<Jar>("sourcesJar") {
-    classifier = "sources"
+    archiveClassifier.set("sources")
     from(android.sourceSets["main"].java.srcDirs)
 }
 
