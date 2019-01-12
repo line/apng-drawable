@@ -96,8 +96,8 @@ tasks.withType(DokkaAndroidTask::class.java) {
 
 
 dependencies {
-    implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
-    implementation(Libs.androidxAnnotation)
+    api(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
+    api(Libs.androidxAnnotation)
 
     testImplementation(Libs.junit)
     testImplementation(Libs.robolectric)
