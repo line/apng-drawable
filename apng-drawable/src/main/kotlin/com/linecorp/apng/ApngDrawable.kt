@@ -96,16 +96,22 @@ class ApngDrawable @VisibleForTesting internal constructor(
     val allocationByteCount: Long = apng.allFrameByteCount + frameByteCount
 
     /**
-     * The number of times to loop this APNG image. The value must be a signed value.
-     * `0` indicates infinite looping.
+     * The number of times to loop this APNG image. The value must be a signed value or special
+     * values.
+     *
+     * The special values are:
+     *  - [LOOP_FOREVER] indicates infinite looping.
+     *  - [LOOP_INTRINSIC] indicated the default looping count.
      */
-    @IntRange(from = 0, to = Int.MAX_VALUE.toLong())
+    @IntRange(from = LOOP_INTRINSIC.toLong(), to = Int.MAX_VALUE.toLong())
     var loopCount: Int = apng.loopCount
         set(value) {
-            if (value < 0) {
-                throw IllegalArgumentException("`loopCount` must be a signed value. $value")
+            if (value < LOOP_INTRINSIC) {
+                throw IllegalArgumentException(
+                    "`loopCount` must be a signed value or special values. (value = $value)"
+                )
             }
-            field = value
+            field = if (value == LOOP_INTRINSIC) apng.loopCount else value
         }
 
     /**
@@ -231,6 +237,20 @@ class ApngDrawable @VisibleForTesting internal constructor(
     }
 
     companion object {
+
+        /**
+         * The constant value for [loopCount] that indicates infinite looping.
+         *
+         * @see [loopCount]
+         */
+        const val LOOP_FOREVER = 0
+
+        /**
+         * The constant value for [loopCount] that indicates the original looping count.
+         *
+         * @see [loopCount]
+         */
+        const val LOOP_INTRINSIC = -1
 
         private fun scaleFromDensity(size: Int, sourceDensity: Int, targetDensity: Int): Int {
             return if (sourceDensity == Bitmap.DENSITY_NONE ||
