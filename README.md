@@ -3,7 +3,7 @@
 [![Download](https://api.bintray.com/packages/line/apng-drawable/com.linecorp.apng/images/download.svg)](https://bintray.com/line/apng-drawable/com.linecorp.apng/_latestVersion)
 
 ApngDrawable is fast and light weight Animated Portable Network Graphics(APNG) image decoder library for Android platform.
-an Android library project that provides image trimming. ApngDrawable is written in Kotlin and C++.
+ApngDrawable is written in Kotlin and C++.
 
 ## How to use
 
