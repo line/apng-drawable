@@ -161,11 +161,11 @@ class ApngDrawableTest {
             any()
         )
 
-        // Because repeat count is exceeded, so shows first frame.
+        // Because repeat count is exceeded, so shows last frame.
         currentTimeProvider.currentTimeMillis = 210L
         target.draw(canvas)
-        verify(nBitmapAnimation, times(2)).drawWithIndex(
-            eq(0),
+        verify(nBitmapAnimation, times(1)).drawWithIndex(
+            eq(9),
             eq(canvas),
             anyOrNull(),
             eq(Rect(0, 0, 200, 100)),

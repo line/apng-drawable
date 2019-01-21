@@ -265,8 +265,6 @@ class ApngDrawable @VisibleForTesting internal constructor(
         animationPrevDrawTimeMillis = currentTimeMillis
 
         if (exceedsRepeatCountLimitation()) {
-            animationElapsedTimeMillis = 0L
-            animationPrevDrawTimeMillis = null
             isStarted = false
             animationCallbacks.forEach {
                 it.onAnimationEnd(this)
