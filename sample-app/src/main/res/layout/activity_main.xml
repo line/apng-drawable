@@ -99,6 +99,18 @@
             android:text="@string/stop" />
 
         <Button
+            android:id="@+id/button_seek_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seek_to_first" />
+
+        <Button
+            android:id="@+id/button_seek_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seek_to_end" />
+
+        <Button
             android:id="@+id/button_gc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

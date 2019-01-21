@@ -30,6 +30,8 @@ import kotlinx.android.synthetic.main.activity_main.button_load_image_1_10x
 import kotlinx.android.synthetic.main.activity_main.button_load_image_1_5x
 import kotlinx.android.synthetic.main.activity_main.button_load_image_2_jpeg
 import kotlinx.android.synthetic.main.activity_main.button_load_image_2_normal_png
+import kotlinx.android.synthetic.main.activity_main.button_seek_end
+import kotlinx.android.synthetic.main.activity_main.button_seek_start
 import kotlinx.android.synthetic.main.activity_main.button_start
 import kotlinx.android.synthetic.main.activity_main.button_stop
 import kotlinx.android.synthetic.main.activity_main.imageView
@@ -52,6 +54,8 @@ class MainActivity : AppCompatActivity() {
         button_start.setOnClickListener { startAnimation() }
         button_stop.setOnClickListener { stopAnimation() }
         button_gc.setOnClickListener { runGc() }
+        button_seek_start.setOnClickListener { seekTo(0L) }
+        button_seek_end.setOnClickListener { seekTo(10000000L) }
     }
 
     @SuppressLint("SetTextI18n")
@@ -85,6 +89,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun runGc() {
         System.gc()
+    }
+
+    private fun seekTo(time: Long) {
+        drawable?.seekTo(time)
     }
 
     private class AnimationEventListener : Animatable2Compat.AnimationCallback() {
