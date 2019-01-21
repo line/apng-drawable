@@ -131,9 +131,15 @@ class ApngDrawable @VisibleForTesting internal constructor(
      * [durationMillis] is the duration to animate one loop of APNG animation. [frameCount]
      * is number of APNG frames. For example, if one loop duration is 1000ms, image count is 10 and
      * elapsed time is 2100ms, the frame index should be 1 of 3rd loop.
+     * If this image isn't infinite looping image and [animationElapsedTimeMillis] is larger than
+     * total duration of this image's animation, returns always last frame index.
      */
     private val currentFrameIndex: Int
-        get() = (animationElapsedTimeMillis % durationMillis * frameCount / durationMillis).toInt()
+        get() = if (loopCount != 0 && exceedsRepeatCountLimitation()) {
+            frameCount - 1
+        } else {
+            (animationElapsedTimeMillis % durationMillis * frameCount / durationMillis).toInt()
+        }
 
     private var scaledWidth: Int = width
     private var scaledHeight: Int = height
@@ -224,6 +230,22 @@ class ApngDrawable @VisibleForTesting internal constructor(
      */
     fun setTargetDensity(metrics: DisplayMetrics) {
         targetDensity = metrics.densityDpi
+    }
+
+    /**
+     * Seeks frame to given position and show the image with target frame.
+     * If given position is larger than total duration of animation,
+     *
+     * @param positionMillis Time to seek in milliseconds
+     * @throws IllegalArgumentException If [positionMillis] is less than 0
+     */
+    fun seekTo(@IntRange(from = 0L, to = Long.MAX_VALUE) positionMillis: Long) {
+        if (positionMillis < 0) {
+            throw IllegalArgumentException("positionMillis must be positive value")
+        }
+        animationPrevDrawTimeMillis = null
+        animationElapsedTimeMillis = positionMillis
+        invalidateSelf()
     }
 
     /**
