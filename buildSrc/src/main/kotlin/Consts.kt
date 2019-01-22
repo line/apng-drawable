@@ -1,5 +1,5 @@
 object Consts {
-    const val version = "1.1.0"
+    const val version = "1.2.0"
     const val groupId = "com.linecorp"
     const val artifactId = "apng"
     const val bintrayRepo = "apng-drawable"
