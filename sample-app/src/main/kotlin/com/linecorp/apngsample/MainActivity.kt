@@ -24,12 +24,14 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import com.linecorp.apng.ApngDrawable
+import kotlinx.android.synthetic.main.activity_main.button_copy
 import kotlinx.android.synthetic.main.activity_main.button_gc
 import kotlinx.android.synthetic.main.activity_main.button_load_image_1
 import kotlinx.android.synthetic.main.activity_main.button_load_image_1_10x
 import kotlinx.android.synthetic.main.activity_main.button_load_image_1_5x
 import kotlinx.android.synthetic.main.activity_main.button_load_image_2_jpeg
 import kotlinx.android.synthetic.main.activity_main.button_load_image_2_normal_png
+import kotlinx.android.synthetic.main.activity_main.button_mutate
 import kotlinx.android.synthetic.main.activity_main.button_seek_end
 import kotlinx.android.synthetic.main.activity_main.button_seek_start
 import kotlinx.android.synthetic.main.activity_main.button_start
@@ -50,6 +52,8 @@ class MainActivity : AppCompatActivity() {
         button_load_image_1_10x.setOnClickListener { startLoad("test.png", 1000, 1000) }
         button_load_image_2_normal_png.setOnClickListener { startLoad("normal_png.png") }
         button_load_image_2_jpeg.setOnClickListener { startLoad("jpeg.jpg") }
+        button_mutate.setOnClickListener { mutate() }
+        button_copy.setOnClickListener { duplicate() }
 
         button_start.setOnClickListener { startAnimation() }
         button_stop.setOnClickListener { stopAnimation() }
@@ -77,6 +81,20 @@ class MainActivity : AppCompatActivity() {
             imageView.scaleType = ImageView.ScaleType.CENTER
         }
         Log.d("apng", "size: ${drawable?.allocationByteCount} byte")
+    }
+
+    private fun mutate() {
+        drawable?.mutate()
+    }
+
+    private fun duplicate() {
+        drawable = drawable?.constantState?.newDrawable() as? ApngDrawable ?: return
+        drawable?.loopCount = 5
+        drawable?.registerAnimationCallback(AnimationEventListener())
+        drawable?.setTargetDensity(resources.displayMetrics)
+
+        (imageView.drawable as? ApngDrawable)?.recycle()
+        imageView.setImageDrawable(drawable)
     }
 
     private fun startAnimation() {
