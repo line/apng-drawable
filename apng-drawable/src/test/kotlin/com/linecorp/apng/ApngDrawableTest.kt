@@ -54,7 +54,15 @@ class ApngDrawableTest {
         whenever(nBitmapAnimation.frameCount).thenReturn(10)
         whenever(nBitmapAnimation.loopCount).thenReturn(2)
         currentTimeProvider = CurrentTimeProvider(0L)
-        target = ApngDrawable(nBitmapAnimation, 200, 100) { currentTimeProvider.provide() }
+        target = ApngDrawable(
+            ApngDrawable.ApngState(
+                nBitmapAnimation,
+                200,
+                100
+            ) {
+                currentTimeProvider.provide()
+            }
+        )
     }
 
     @Test

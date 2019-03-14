@@ -234,6 +234,40 @@ Java_com_linecorp_apng_decoder_ApngDecoderJni_recycle(
   LOGV("recycle end");
   return SUCCESS;
 }
+
+JNIEXPORT jint JNICALL
+Java_com_linecorp_apng_decoder_ApngDecoderJni_copy(
+    JNIEnv *env,
+    jclass thiz,
+    jint id,
+    jobject result
+) {
+  LOGV("copy start. id : %d", id);
+  if (id < 0) {
+    return ERR_NOT_EXIST_IMAGE;
+  }
+  std::lock_guard<std::mutex> lock(gLock);
+  auto const &it = gImageMap.find(id);
+  if (it == gImageMap.end()) {
+    return ERR_NOT_EXIST_IMAGE;
+  }
+
+  auto copyPtr = it->second;
+
+  env->SetIntField(result, gResult_widthFieldID, copyPtr->getWidth());
+  env->SetIntField(result, gResult_heightFieldID, copyPtr->getHeight());
+  env->SetIntField(result, gResult_frameCountFieldID, copyPtr->getFrameCount());
+  env->SetIntField(result, gResult_repeatCountFieldID, copyPtr->getRepeatCount());
+  env->SetIntField(result, gResult_durationFieldID, copyPtr->getTotalDuration());
+  env->SetLongField(result, gResult_allFrameByteCountFieldID, copyPtr->getAllFrameByteCount());
+
+  int32_t resultId = ++gIdCounter;
+  gImageMap.emplace(resultId, std::move(copyPtr));
+  LOGV(" | total images: %ld", gImageMap.size());
+  LOGV("copy end");
+  return resultId;
+}
+
 #pragma clang diagnostic pop
 }
 }
