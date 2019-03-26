@@ -318,7 +318,6 @@ class ApngDrawable @VisibleForTesting internal constructor(
         override fun newDrawable(): Drawable = ApngDrawable(ApngState(this))
 
         override fun getChangingConfigurations(): Int = 0
-
     }
 
     companion object {

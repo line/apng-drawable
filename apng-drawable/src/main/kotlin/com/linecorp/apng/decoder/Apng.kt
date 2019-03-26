@@ -170,7 +170,7 @@ internal class Apng(
         }
 
         @Throws(ApngException::class)
-        fun copy(apng: Apng) : Apng {
+        fun copy(apng: Apng): Apng {
             val result = DecodeResult()
             Trace.beginSection("Apng#copy")
             val id = try {

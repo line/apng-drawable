@@ -39,5 +39,4 @@ internal object ApngDecoderJni {
 
     @JvmStatic
     external fun copy(id: Int, result: Apng.DecodeResult): Int
-
 }
