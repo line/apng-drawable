@@ -23,21 +23,38 @@
 
         <Button
             android:id="@+id/button_load_image_1"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="@string/load" />
 
         <Button
             android:id="@+id/button_load_image_1_5x"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="@string/load_5x" />
 
         <Button
             android:id="@+id/button_load_image_1_10x"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="@string/load_10x" />
+
+        <Button
+            android:id="@+id/button_mutate"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/mutate" />
+
+        <Button
+            android:id="@+id/button_copy"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/copy" />
     </LinearLayout>
 
     <TextView

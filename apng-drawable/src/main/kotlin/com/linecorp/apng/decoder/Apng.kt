@@ -89,6 +89,8 @@ internal class Apng(
         bitmap.recycle()
     }
 
+    fun copy(): Apng = copy(this)
+
     @Suppress("unused")
     fun finalize() {
         if (BuildConfig.DEBUG) {
@@ -162,6 +164,33 @@ internal class Apng(
         fun isApng(stream: InputStream): Boolean {
             return try {
                 ApngDecoderJni.isApng(stream)
+            } catch (e: Throwable) {
+                throw ApngException(e)
+            }
+        }
+
+        @Throws(ApngException::class)
+        fun copy(apng: Apng): Apng {
+            val result = DecodeResult()
+            Trace.beginSection("Apng#copy")
+            val id = try {
+                ApngDecoderJni.copy(apng.id, result)
+            } catch (e: Throwable) {
+                throw ApngException(e)
+            } finally {
+                Trace.endSection()
+            }
+            throwIfError(id)
+            try {
+                return Apng(
+                    id,
+                    result.width,
+                    result.height,
+                    result.frameCount,
+                    result.duration,
+                    result.loopCount,
+                    result.allFrameByteCount
+                )
             } catch (e: Throwable) {
                 throw ApngException(e)
             }

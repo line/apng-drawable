@@ -36,4 +36,7 @@ internal object ApngDecoderJni {
 
     @JvmStatic
     external fun draw(id: Int, index: Int, bitmap: Bitmap): Int
+
+    @JvmStatic
+    external fun copy(id: Int, result: Apng.DecodeResult): Int
 }

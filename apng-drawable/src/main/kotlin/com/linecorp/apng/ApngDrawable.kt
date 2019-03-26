@@ -52,48 +52,36 @@ import java.io.InputStream
  * delegates [apng] to draw a frame.
  */
 class ApngDrawable @VisibleForTesting internal constructor(
-    private val apng: Apng,
     /**
-     * The width size of this image in [sourceDensity].
+     * Stored shared state and data between mutated ApngDrawables.
      */
-    @IntRange(from = 1, to = Int.MAX_VALUE.toLong())
-    val width: Int,
-    /**
-     * The height size of this image in [sourceDensity].
-     */
-    @IntRange(from = 1, to = Int.MAX_VALUE.toLong())
-    val height: Int,
-    /**
-     * The source image density.
-     */
-    val sourceDensity: Int = Bitmap.DENSITY_NONE,
-    private val currentTimeProvider: () -> Long = { AnimationUtils.currentAnimationTimeMillis() }
+    private var apngState: ApngState
 ) : Drawable(), Animatable2Compat {
 
     /**
      * The duration to animate one loop of APNG animation.
      */
     @IntRange(from = 0, to = Int.MAX_VALUE.toLong())
-    val durationMillis: Int = apng.duration
+    val durationMillis: Int = apngState.apng.duration
 
     /**
      * The number of frames included in this APNG image.
      */
     @IntRange(from = 1, to = Int.MAX_VALUE.toLong())
-    val frameCount: Int = apng.frameCount
+    val frameCount: Int = apngState.apng.frameCount
 
     /**
      * The number of bytes required for the non-native layer.
      * In most cases, this is the number of bytes used to display one frame.
      */
     @IntRange(from = 0, to = Int.MAX_VALUE.toLong())
-    val frameByteCount: Int = apng.byteCount
+    val frameByteCount: Int = apngState.apng.byteCount
 
     /**
      * The size of memory required for this image, including all frames loaded in the native layer.
      */
     @IntRange(from = 0, to = Int.MAX_VALUE.toLong())
-    val allocationByteCount: Long = apng.allFrameByteCount + frameByteCount
+    val allocationByteCount: Long = apngState.apng.allFrameByteCount + frameByteCount
 
     /**
      * The number of times to loop this APNG image. The value must be a signed value or special
@@ -104,22 +92,22 @@ class ApngDrawable @VisibleForTesting internal constructor(
      *  - [LOOP_INTRINSIC] indicated the default looping count.
      */
     @IntRange(from = LOOP_INTRINSIC.toLong(), to = Int.MAX_VALUE.toLong())
-    var loopCount: Int = apng.loopCount
+    var loopCount: Int = apngState.apng.loopCount
         set(value) {
             if (value < LOOP_INTRINSIC) {
                 throw IllegalArgumentException(
                     "`loopCount` must be a signed value or special values. (value = $value)"
                 )
             }
-            field = if (value == LOOP_INTRINSIC) apng.loopCount else value
+            field = if (value == LOOP_INTRINSIC) apngState.apng.loopCount else value
         }
 
     /**
      * Whether this drawable has already been destroyed or not.
      */
-    val isRecycled: Boolean = apng.isRecycled
+    val isRecycled: Boolean = apngState.apng.isRecycled
 
-    private val dstRect: Rect = Rect(0, 0, width, height)
+    private val dstRect: Rect = Rect(0, 0, apngState.width, apngState.height)
     private val paint: Paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG)
     private val animationCallbacks: MutableList<Animatable2Compat.AnimationCallback> = arrayListOf()
     private val currentRepeatCount: Int
@@ -141,8 +129,8 @@ class ApngDrawable @VisibleForTesting internal constructor(
             (animationElapsedTimeMillis % durationMillis * frameCount / durationMillis).toInt()
         }
 
-    private var scaledWidth: Int = width
-    private var scaledHeight: Int = height
+    private var scaledWidth: Int = apngState.width
+    private var scaledHeight: Int = apngState.height
     private var isStarted: Boolean = false
     private var animationElapsedTimeMillis: Long = 0L
     private var animationPrevDrawTimeMillis: Long? = null
@@ -164,7 +152,13 @@ class ApngDrawable @VisibleForTesting internal constructor(
         if (isStarted) {
             progressAnimationElapsedTime()
         }
-        val drawIntervalMillis = apng.drawWithIndex(currentFrameIndex, canvas, null, dstRect, paint)
+        val drawIntervalMillis = apngState.apng.drawWithIndex(
+            currentFrameIndex,
+            canvas,
+            null,
+            dstRect,
+            paint
+        )
         if (isStarted) {
             scheduleSelf({ invalidateSelf() }, drawIntervalMillis.toLong())
         }
@@ -222,6 +216,15 @@ class ApngDrawable @VisibleForTesting internal constructor(
 
     override fun clearAnimationCallbacks() = animationCallbacks.clear()
 
+    override fun getConstantState(): ConstantState? {
+        return apngState
+    }
+
+    override fun mutate(): Drawable {
+        apngState = ApngState(apngState)
+        return this
+    }
+
     /**
      * Sets the density scale at which this drawable will be rendered.
      * If [sourceDensity] is [Bitmap.DENSITY_NONE], this value is ignored.
@@ -252,10 +255,10 @@ class ApngDrawable @VisibleForTesting internal constructor(
      * Releases resources managed by the native layer.
      * Call this image when it is no longer used.
      */
-    fun recycle() = apng.recycle()
+    fun recycle() = apngState.apng.recycle()
 
     private fun progressAnimationElapsedTime() {
-        val currentTimeMillis = currentTimeProvider.invoke()
+        val currentTimeMillis = apngState.currentTimeProvider.invoke()
         val animationPrevDrawTimeMillisSnapShot = animationPrevDrawTimeMillis
         animationElapsedTimeMillis = if (animationPrevDrawTimeMillisSnapShot == null) {
             animationElapsedTimeMillis
@@ -280,9 +283,41 @@ class ApngDrawable @VisibleForTesting internal constructor(
     }
 
     private fun computeBitmapSize() {
-        scaledWidth = scaleFromDensity(width, sourceDensity, targetDensity)
-        scaledHeight = scaleFromDensity(height, sourceDensity, targetDensity)
+        scaledWidth = scaleFromDensity(apngState.width, apngState.sourceDensity, targetDensity)
+        scaledHeight = scaleFromDensity(apngState.height, apngState.sourceDensity, targetDensity)
         dstRect.set(0, 0, scaledWidth, scaledHeight)
+    }
+
+    internal class ApngState(
+        val apng: Apng,
+        /**
+         * The width size of this image in [sourceDensity].
+         */
+        @IntRange(from = 1, to = Int.MAX_VALUE.toLong())
+        val width: Int,
+        /**
+         * The height size of this image in [sourceDensity].
+         */
+        @IntRange(from = 1, to = Int.MAX_VALUE.toLong())
+        val height: Int,
+        /**
+         * The source image density.
+         */
+        val sourceDensity: Int = Bitmap.DENSITY_NONE,
+        val currentTimeProvider: () -> Long = { AnimationUtils.currentAnimationTimeMillis() }
+    ) : ConstantState() {
+
+        constructor(apngState: ApngState) : this(
+            apngState.apng.copy(),
+            apngState.width,
+            apngState.height,
+            apngState.sourceDensity,
+            apngState.currentTimeProvider
+        )
+
+        override fun newDrawable(): Drawable = ApngDrawable(ApngState(this))
+
+        override fun getChangingConfigurations(): Int = 0
     }
 
     companion object {
@@ -457,10 +492,12 @@ class ApngDrawable @VisibleForTesting internal constructor(
             }
             val apng = Apng.decode(stream)
             return ApngDrawable(
-                apng,
-                width ?: apng.width,
-                height ?: apng.height,
-                density
+                ApngState(
+                    apng,
+                    width ?: apng.width,
+                    height ?: apng.height,
+                    density
+                )
             )
         }
         // endregion
