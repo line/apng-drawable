@@ -6,12 +6,10 @@ package com.linecorp.apng
 interface RepeatAnimationCallback {
     /**
      * This is called when animation is about to be repeated.
-     * [loopCount] is the total number of times the animation will be repeated.
-     * [nextLoop] is the loop count of the next animation.
+     * @param [nextLoop] loop count of the next animation.
      */
     fun onRepeat(
         drawable: ApngDrawable,
-        loopCount: Int,
         nextLoop: Int
     )
 }
