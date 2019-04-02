@@ -108,6 +108,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
 
     private val paint: Paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG)
     private val animationCallbacks: MutableList<Animatable2Compat.AnimationCallback> = arrayListOf()
+    private val repeatAnimationCallbacks: MutableList<RepeatAnimationCallback> = arrayListOf()
     private val currentRepeatCount: Int
         get() = (animationElapsedTimeMillis / durationMillis).toInt() + 1
     /**
@@ -186,9 +187,6 @@ class ApngDrawable @VisibleForTesting internal constructor(
         isStarted = true
         animationPrevDrawTimeMillis = null
         invalidateSelf()
-        animationCallbacks.forEach {
-            it.onAnimationStart(this)
-        }
     }
 
     override fun stop() {
@@ -215,6 +213,14 @@ class ApngDrawable @VisibleForTesting internal constructor(
     override fun unregisterAnimationCallback(
         callback: Animatable2Compat.AnimationCallback
     ): Boolean = animationCallbacks.remove(callback)
+
+    fun registerRepeatAnimationCallback(repeatCallback: RepeatAnimationCallback) {
+        repeatAnimationCallbacks.add(repeatCallback)
+    }
+
+    fun unregisterRepeatAnimationCallback(
+        repeatCallback: RepeatAnimationCallback
+    ): Boolean = repeatAnimationCallbacks.remove(repeatCallback)
 
     override fun clearAnimationCallbacks() = animationCallbacks.clear()
 
@@ -260,6 +266,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
     fun recycle() = apngState.apng.recycle()
 
     private fun progressAnimationElapsedTime() {
+        val lastFrame = currentFrameIndex
         val currentTimeMillis = apngState.currentTimeProvider.invoke()
         val animationPrevDrawTimeMillisSnapShot = animationPrevDrawTimeMillis
         animationElapsedTimeMillis = if (animationPrevDrawTimeMillisSnapShot == null) {
@@ -268,7 +275,27 @@ class ApngDrawable @VisibleForTesting internal constructor(
             animationElapsedTimeMillis + currentTimeMillis - animationPrevDrawTimeMillisSnapShot
         }
         animationPrevDrawTimeMillis = currentTimeMillis
+        val frameChanged = currentFrameIndex != lastFrame
 
+        if (isStarted) {
+            if (
+                isFirstFrame() &&
+                isFirstLoop() &&
+                animationPrevDrawTimeMillisSnapShot == null
+            ) {
+                animationCallbacks.forEach {
+                    it.onAnimationStart(this)
+                }
+            } else if (
+                isLastFrame() &&
+                hasNextLoop() &&
+                frameChanged
+            ) {
+                repeatAnimationCallbacks.forEach {
+                    it.onRepeat(this, currentRepeatCount + 1)
+                }
+            }
+        }
         if (exceedsRepeatCountLimitation()) {
             isStarted = false
             animationCallbacks.forEach {
@@ -276,6 +303,14 @@ class ApngDrawable @VisibleForTesting internal constructor(
             }
         }
     }
+
+    private fun isFirstFrame(): Boolean = currentFrameIndex == 0
+
+    private fun isLastFrame(): Boolean = currentFrameIndex == frameCount - 1
+
+    private fun isFirstLoop(): Boolean = currentRepeatCount == 1
+
+    private fun hasNextLoop(): Boolean = currentRepeatCount < loopCount
 
     private fun exceedsRepeatCountLimitation(): Boolean {
         if (loopCount == 0) {

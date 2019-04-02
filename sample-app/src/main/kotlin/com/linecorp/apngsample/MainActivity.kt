@@ -24,6 +24,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import com.linecorp.apng.ApngDrawable
+import com.linecorp.apng.RepeatAnimationCallback
 import kotlinx.android.synthetic.main.activity_main.button_copy
 import kotlinx.android.synthetic.main.activity_main.button_gc
 import kotlinx.android.synthetic.main.activity_main.button_load_image_1
@@ -37,11 +38,31 @@ import kotlinx.android.synthetic.main.activity_main.button_seek_start
 import kotlinx.android.synthetic.main.activity_main.button_start
 import kotlinx.android.synthetic.main.activity_main.button_stop
 import kotlinx.android.synthetic.main.activity_main.imageView
+import kotlinx.android.synthetic.main.activity_main.text_callback
 import kotlinx.android.synthetic.main.activity_main.text_status
 
 class MainActivity : AppCompatActivity() {
 
     private var drawable: ApngDrawable? = null
+
+    @SuppressLint("SetTextI18n")
+    private val animationCallback = object : AnimationCallbacks() {
+        override fun onAnimationStart(drawable: Drawable?) {
+            Log.d("apng", "Animation start")
+            text_callback.text = "Animation started"
+        }
+        override fun onRepeat(drawable: ApngDrawable, nextLoop: Int) {
+            val loopCount = drawable.loopCount
+            Log.d("apng", "Animation repeat loopCount: $loopCount, nextLoop: $nextLoop")
+            text_callback.text = "Animation repeat " +
+                    "loopCount: $loopCount, " +
+                    "nextLoop: $nextLoop"
+        }
+        override fun onAnimationEnd(drawable: Drawable?) {
+            Log.d("apng", "Animation end")
+            text_callback.text = "Animation ended"
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,8 +96,9 @@ class MainActivity : AppCompatActivity() {
         if (isApng) {
             drawable = ApngDrawable.decode(assets, name, width, height)
             drawable?.loopCount = 5
-            drawable?.registerAnimationCallback(AnimationEventListener())
             drawable?.setTargetDensity(resources.displayMetrics)
+            drawable?.registerAnimationCallback(animationCallback)
+            drawable?.registerRepeatAnimationCallback(animationCallback)
             imageView.setImageDrawable(drawable)
             imageView.scaleType = ImageView.ScaleType.CENTER
         }
@@ -90,7 +112,8 @@ class MainActivity : AppCompatActivity() {
     private fun duplicate() {
         drawable = drawable?.constantState?.newDrawable() as? ApngDrawable ?: return
         drawable?.loopCount = 5
-        drawable?.registerAnimationCallback(AnimationEventListener())
+        drawable?.registerAnimationCallback(animationCallback)
+        drawable?.registerRepeatAnimationCallback(animationCallback)
         drawable?.setTargetDensity(resources.displayMetrics)
 
         (imageView.drawable as? ApngDrawable)?.recycle()
@@ -113,13 +136,6 @@ class MainActivity : AppCompatActivity() {
         drawable?.seekTo(time)
     }
 
-    private class AnimationEventListener : Animatable2Compat.AnimationCallback() {
-        override fun onAnimationStart(drawable: Drawable?) {
-            Log.d("apng", "Animation start")
-        }
-
-        override fun onAnimationEnd(drawable: Drawable?) {
-            Log.d("apng", "Animation end")
-        }
-    }
+    private abstract class AnimationCallbacks
+        : Animatable2Compat.AnimationCallback(), RepeatAnimationCallback
 }
