@@ -86,7 +86,6 @@ internal class Apng(
 
     fun recycle() {
         ApngDecoderJni.recycle(id)
-        bitmap.recycle()
     }
 
     fun copy(): Apng = copy(this)
