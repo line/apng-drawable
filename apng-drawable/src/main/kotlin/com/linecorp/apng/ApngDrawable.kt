@@ -122,7 +122,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
      * total duration of this image's animation, returns always last frame index.
      */
     private val currentFrameIndex: Int
-        get() = if (loopCount != 0 && exceedsRepeatCountLimitation()) {
+        get() = if (loopCount != LOOP_FOREVER && exceedsRepeatCountLimitation()) {
             frameCount - 1
         } else {
             (animationElapsedTimeMillis % durationMillis * frameCount / durationMillis).toInt()
@@ -318,7 +318,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
     }
 
     private fun exceedsRepeatCountLimitation(): Boolean {
-        if (loopCount == 0) {
+        if (loopCount == LOOP_FOREVER) {
             return false
         }
         return currentRepeatCount > loopCount
