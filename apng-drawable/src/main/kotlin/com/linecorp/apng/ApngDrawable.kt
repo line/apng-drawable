@@ -310,7 +310,12 @@ class ApngDrawable @VisibleForTesting internal constructor(
 
     private fun isFirstLoop(): Boolean = currentRepeatCount == 1
 
-    private fun hasNextLoop(): Boolean = currentRepeatCount < loopCount
+    private fun hasNextLoop(): Boolean {
+        if (loopCount == LOOP_FOREVER) {
+            return true
+        }
+        return currentRepeatCount < loopCount
+    }
 
     private fun exceedsRepeatCountLimitation(): Boolean {
         if (loopCount == 0) {
