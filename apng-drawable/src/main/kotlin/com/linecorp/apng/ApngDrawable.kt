@@ -106,11 +106,14 @@ class ApngDrawable @VisibleForTesting internal constructor(
      */
     val isRecycled: Boolean = apngState.apng.isRecycled
 
-    private val paint: Paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG)
-    private val animationCallbacks: MutableList<Animatable2Compat.AnimationCallback> = arrayListOf()
-    private val repeatAnimationCallbacks: MutableList<RepeatAnimationCallback> = arrayListOf()
-    private val currentRepeatCount: Int
-        get() = (animationElapsedTimeMillis / durationMillis).toInt() + 1
+    /**
+     * The number indicating the current loop number.
+     * The first loop is `1` and last loop is same with [loopCount]
+     */
+    val currentRepeatCount: Int
+        get() =
+            if (currentRepeatCountInternal > loopCount) loopCount else currentRepeatCountInternal
+
     /**
      * [currentFrameIndex] is the index to indicate which frame should show at that time.
      * [currentFrameIndex] is calculated with APNG meta data and elapsed time after animation
@@ -121,13 +124,18 @@ class ApngDrawable @VisibleForTesting internal constructor(
      * If this image isn't infinite looping image and [animationElapsedTimeMillis] is larger than
      * total duration of this image's animation, returns always last frame index.
      */
-    private val currentFrameIndex: Int
+    val currentFrameIndex: Int
         get() = if (loopCount != LOOP_FOREVER && exceedsRepeatCountLimitation()) {
             frameCount - 1
         } else {
             (animationElapsedTimeMillis % durationMillis * frameCount / durationMillis).toInt()
         }
 
+    private val currentRepeatCountInternal: Int
+        get() = (animationElapsedTimeMillis / durationMillis).toInt() + 1
+    private val paint: Paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG)
+    private val animationCallbacks: MutableList<Animatable2Compat.AnimationCallback> = arrayListOf()
+    private val repeatAnimationCallbacks: MutableList<RepeatAnimationCallback> = arrayListOf()
     private var scaledWidth: Int = apngState.width
     private var scaledHeight: Int = apngState.height
     private var isStarted: Boolean = false
@@ -292,7 +300,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
                 frameChanged
             ) {
                 repeatAnimationCallbacks.forEach {
-                    it.onRepeat(this, currentRepeatCount + 1)
+                    it.onRepeat(this, currentRepeatCountInternal + 1)
                 }
             }
         }
@@ -308,20 +316,20 @@ class ApngDrawable @VisibleForTesting internal constructor(
 
     private fun isLastFrame(): Boolean = currentFrameIndex == frameCount - 1
 
-    private fun isFirstLoop(): Boolean = currentRepeatCount == 1
+    private fun isFirstLoop(): Boolean = currentRepeatCountInternal == 1
 
     private fun hasNextLoop(): Boolean {
         if (loopCount == LOOP_FOREVER) {
             return true
         }
-        return currentRepeatCount < loopCount
+        return currentRepeatCountInternal < loopCount
     }
 
     private fun exceedsRepeatCountLimitation(): Boolean {
         if (loopCount == LOOP_FOREVER) {
             return false
         }
-        return currentRepeatCount > loopCount
+        return currentRepeatCountInternal > loopCount
     }
 
     private fun computeBitmapSize() {
