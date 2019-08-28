@@ -189,12 +189,25 @@ std::unique_ptr<ApngImage> ApngDecoder::decode(
 
   // Allocate buffers
   LOGV(" | allocate buffers");
+  // Check unsigned integer wrapping
+  if (height > SIZE_MAX / row_bytes) {
+    png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+    result = ERR_INVALID_FILE_FORMAT;
+    return nullptr;
+  }
   size_t size = height * row_bytes;
   std::unique_ptr<uint8_t[]> p_frame(new uint8_t[size]());
   std::unique_ptr<uint8_t[]> p_buffer(new uint8_t[size]());
   std::unique_ptr<uint8_t[]> p_previous_frame(new uint8_t[size]());
-  std::unique_ptr<png_bytep[]> rows_frame(new png_bytep[height * sizeof(png_bytep)]);
-  std::unique_ptr<png_bytep[]> rows_buffer(new png_bytep[height * sizeof(png_bytep)]);
+  // Check unsigned integer wrapping
+  if (height > SIZE_MAX / sizeof(png_bytep)) {
+    png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+    result = ERR_INVALID_FILE_FORMAT;
+    return nullptr;
+  }
+  size_t row_ptr_array_size = height * sizeof(png_bytep);
+  std::unique_ptr<png_bytep[]> rows_frame(new png_bytep[row_ptr_array_size]);
+  std::unique_ptr<png_bytep[]> rows_buffer(new png_bytep[row_ptr_array_size]);
   if (!p_frame || !p_buffer || !p_previous_frame || !rows_frame || !rows_buffer) {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
     result = ERR_OUT_OF_MEMORY;
