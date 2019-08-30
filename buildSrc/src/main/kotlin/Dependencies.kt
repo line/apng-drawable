@@ -16,7 +16,8 @@ object Versions {
     const val targetSdkVersion = 28
 
     // Library
-    const val androidxVersion = "1.0.1"
+    const val androidxAppCompatVersion = "1.0.1"
+    const val androidxAnnotationVersion = "1.1.0"
     const val androidxConstraintLayoutVersion = "1.1.3"
     const val androidxAnimatedVectorDrawable = "1.0.0"
     const val junitVersion = "4.12"
@@ -39,8 +40,8 @@ object Libs {
         "com.github.ben-manes:gradle-versions-plugin:${Versions.gradleVersionsPluginVersion}"
 
     // Library
-    val androidxAppcompat = "androidx.appcompat:appcompat:${Versions.androidxVersion}"
-    val androidxAnnotation = "androidx.annotation:annotation:${Versions.androidxVersion}"
+    val androidxAppcompat = "androidx.appcompat:appcompat:${Versions.androidxAppCompatVersion}"
+    val androidxAnnotation = "androidx.annotation:annotation:${Versions.androidxAnnotationVersion}"
     val androidxVectorDrawable =
         "androidx.vectordrawable:vectordrawable-animated:${Versions.androidxAnimatedVectorDrawable}"
     val androidxConstraintLayout =
