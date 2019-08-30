@@ -3,7 +3,7 @@ object Versions {
     const val kotlinVersion = "1.3.31"
 
     // Plugin
-    const val androidPluginVersion = "3.4.1"
+    const val androidPluginVersion = "3.5.0"
     const val ktlintGradleVersion = "6.3.0"
     const val dokkaVersion = "0.9.17"
     const val bintrayGradlePluginVersion = "1.8.4"
