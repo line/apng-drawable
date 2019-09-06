@@ -76,6 +76,8 @@ $ ./gradlew :sample-app:assembleDebug
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
 
+If you believe you have discovered a vulnerability or have an issue related to security, please contact the maintainer directly or send us a email to dl_oss_dev@linecorp.com before sending a pull request.
+
 ## License
 
 ```
