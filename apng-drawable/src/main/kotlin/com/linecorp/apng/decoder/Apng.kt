@@ -46,11 +46,8 @@ internal class Apng(
      */
     @IntRange(from = 1, to = Int.MAX_VALUE.toLong())
     val frameCount: Int,
-    /**
-     * The duration to animate one loop of APNG animation.
-     */
-    @IntRange(from = 0, to = Int.MAX_VALUE.toLong())
-    val duration: Int,
+
+    val frameDurations: IntArray,
     /**
      * The number of times to loop this APNG image. The value must be a signed value.
      * `0` indicates infinite looping.
@@ -78,6 +75,12 @@ internal class Apng(
         Trace.endSection()
     }
 
+    /**
+     * The duration to animate one loop of APNG animation.
+     */
+    @IntRange(from = 0, to = Int.MAX_VALUE.toLong())
+    val duration: Int = frameDurations.sum()
+
     val isRecycled: Boolean
         get() = bitmap.isRecycled
 
@@ -100,16 +103,12 @@ internal class Apng(
 
     /**
      * Draws specified frame to the [canvas].
-     *
-     * @return the duration of this frame if the drawing process is finished correctly,
-     * or error code if any error has happened while the drawing process.
      */
-    fun drawWithIndex(frameIndex: Int, canvas: Canvas, src: Rect?, dst: Rect, paint: Paint): Int {
+    fun drawWithIndex(frameIndex: Int, canvas: Canvas, src: Rect?, dst: Rect, paint: Paint) {
         Trace.beginSection("Apng#draw")
-        val result = ApngDecoderJni.draw(id, frameIndex, bitmap)
+        ApngDecoderJni.draw(id, frameIndex, bitmap)
         Trace.endSection()
         canvas.drawBitmap(bitmap, src, dst, paint)
-        return result
     }
 
     /**
@@ -126,7 +125,7 @@ internal class Apng(
         var height: Int = 0
         var frameCount: Int = 0
         var loopCount: Int = 0
-        var duration: Int = 0
+        var frameDurations: IntArray = intArrayOf()
         var allFrameByteCount: Long = 0
     }
 
@@ -150,7 +149,7 @@ internal class Apng(
                     result.width,
                     result.height,
                     result.frameCount,
-                    result.duration,
+                    result.frameDurations,
                     result.loopCount,
                     result.allFrameByteCount
                 )
@@ -186,7 +185,7 @@ internal class Apng(
                     result.width,
                     result.height,
                     result.frameCount,
-                    result.duration,
+                    result.frameDurations,
                     result.loopCount,
                     result.allFrameByteCount
                 )
