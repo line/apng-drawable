@@ -95,7 +95,8 @@ Java_com_linecorp_apng_decoder_ApngDecoderJni_decode(
 ) {
   LOGV("decode start");
 #ifdef BUILD_DEBUG
-  std::chrono::system_clock::time_point start, end;
+  std::chrono::system_clock::time_point start;
+  std::chrono::system_clock::time_point end;
   start = std::chrono::system_clock::now();
 #endif
   int32_t resultCode;
