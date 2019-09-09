@@ -35,7 +35,7 @@ internal object ApngDecoderJni {
     external fun recycle(id: Int): Int
 
     @JvmStatic
-    external fun draw(id: Int, index: Int, bitmap: Bitmap): Int
+    external fun draw(id: Int, index: Int, bitmap: Bitmap)
 
     @JvmStatic
     external fun copy(id: Int, result: Apng.DecodeResult): Int

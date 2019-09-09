@@ -128,7 +128,9 @@ class ApngDrawable @VisibleForTesting internal constructor(
         get() = if (loopCount != LOOP_FOREVER && exceedsRepeatCountLimitation()) {
             frameCount - 1
         } else {
-            (animationElapsedTimeMillis % durationMillis * frameCount / durationMillis).toInt()
+            val durationInSingleLoop = animationElapsedTimeMillis % durationMillis
+            val index = frameStartTimes.indexOfFirst { durationInSingleLoop < it } - 1
+            if (index < 0) frameCount - 1 else index
         }
 
     private val currentRepeatCountInternal: Int
@@ -136,6 +138,8 @@ class ApngDrawable @VisibleForTesting internal constructor(
     private val paint: Paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG)
     private val animationCallbacks: MutableList<Animatable2Compat.AnimationCallback> = arrayListOf()
     private val repeatAnimationCallbacks: MutableList<RepeatAnimationCallback> = arrayListOf()
+    private val frameStartTimes: IntArray = IntArray(frameCount)
+
     private var scaledWidth: Int = apngState.width
     private var scaledHeight: Int = apngState.height
     private var isStarted: Boolean = false
@@ -156,6 +160,9 @@ class ApngDrawable @VisibleForTesting internal constructor(
         }
 
     init {
+        for (i in 1 until frameCount) {
+            frameStartTimes[i] = frameStartTimes[i - 1] + apngState.apng.frameDurations[i - 1]
+        }
         bounds.set(0, 0, apngState.width, apngState.height)
     }
 
@@ -163,15 +170,19 @@ class ApngDrawable @VisibleForTesting internal constructor(
         if (isStarted) {
             progressAnimationElapsedTime()
         }
-        val drawIntervalMillis = apngState.apng.drawWithIndex(
-            currentFrameIndex,
+        val drawingFrameIndex = currentFrameIndex
+        apngState.apng.drawWithIndex(
+            drawingFrameIndex,
             canvas,
             null,
             bounds,
             paint
         )
         if (isStarted) {
-            scheduleSelf({ invalidateSelf() }, drawIntervalMillis.toLong())
+            scheduleSelf(
+                { invalidateSelf() },
+                apngState.apng.frameDurations[drawingFrameIndex].toLong()
+            )
         }
     }
 

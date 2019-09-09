@@ -38,8 +38,12 @@ static jfieldID gResult_heightFieldID;
 static jfieldID gResult_widthFieldID;
 static jfieldID gResult_frameCountFieldID;
 static jfieldID gResult_repeatCountFieldID;
-static jfieldID gResult_durationFieldID;
+static jfieldID gResult_frameDurationsFieldID;
 static jfieldID gResult_allFrameByteCountFieldID;
+
+bool copyFrameDurations(JNIEnv *env,
+                        const std::shared_ptr<ApngImage> &image,
+                        jintArray &frame_durations_ptr);
 
 extern "C" {
 #pragma clang diagnostic push
@@ -59,7 +63,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
   gResult_widthFieldID = env->GetFieldID(gResult_class, "width", "I");
   gResult_frameCountFieldID = env->GetFieldID(gResult_class, "frameCount", "I");
   gResult_repeatCountFieldID = env->GetFieldID(gResult_class, "loopCount", "I");
-  gResult_durationFieldID = env->GetFieldID(gResult_class, "duration", "I");
+  gResult_frameDurationsFieldID = env->GetFieldID(gResult_class, "frameDurations", "[I");
   gResult_allFrameByteCountFieldID = env->GetFieldID(gResult_class, "allFrameByteCount", "J");
   StreamSource::registerJavaClass(env);
   return JNI_VERSION_1_6;
@@ -74,7 +78,7 @@ JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {
   gResult_widthFieldID = nullptr;
   gResult_frameCountFieldID = nullptr;
   gResult_repeatCountFieldID = nullptr;
-  gResult_durationFieldID = nullptr;
+  gResult_frameDurationsFieldID = nullptr;
   gResult_allFrameByteCountFieldID = nullptr;
   env->DeleteGlobalRef(gResult_class);
   gResult_class = nullptr;
@@ -95,14 +99,15 @@ Java_com_linecorp_apng_decoder_ApngDecoderJni_decode(
 ) {
   LOGV("decode start");
 #ifdef BUILD_DEBUG
-  std::chrono::system_clock::time_point start, end;
+  std::chrono::system_clock::time_point start;
+  std::chrono::system_clock::time_point end;
   start = std::chrono::system_clock::now();
 #endif
   int32_t resultCode;
 
   // decode
   std::unique_ptr<StreamSource> source(new StreamSource(env, inputStream));
-  std::unique_ptr<ApngImage> image = ApngDecoder::decode(std::move(source), resultCode);
+  std::shared_ptr<ApngImage> image = std::move(ApngDecoder::decode(std::move(source), resultCode));
 
   LOGV(" | decode result: %d", resultCode);
 
@@ -124,9 +129,16 @@ Java_com_linecorp_apng_decoder_ApngDecoderJni_decode(
   env->SetIntField(result, gResult_heightFieldID, image->getHeight());
   env->SetIntField(result, gResult_frameCountFieldID, image->getFrameCount());
   env->SetIntField(result, gResult_repeatCountFieldID, image->getRepeatCount());
-  env->SetIntField(result, gResult_durationFieldID, image->getTotalDuration());
   env->SetLongField(result, gResult_allFrameByteCountFieldID, image->getAllFrameByteCount());
-
+  {
+    jintArray frame_durations = env->NewIntArray(image->getFrameCount());
+    if (!frame_durations) {
+      return ERR_OUT_OF_MEMORY;
+    }
+    copyFrameDurations(env, image, frame_durations);
+    env->SetObjectField(result, gResult_frameDurationsFieldID, frame_durations);
+    env->DeleteLocalRef(frame_durations);
+  }
   {
     std::lock_guard<std::mutex> lock(gLock);
     gIdCounter++;
@@ -150,7 +162,7 @@ Java_com_linecorp_apng_decoder_ApngDecoderJni_isApng(
   return static_cast<jboolean>(result);
 }
 
-JNIEXPORT jint JNICALL
+JNIEXPORT void JNICALL
 Java_com_linecorp_apng_decoder_ApngDecoderJni_draw(
     JNIEnv *env,
     jclass thiz,
@@ -161,22 +173,22 @@ Java_com_linecorp_apng_decoder_ApngDecoderJni_draw(
   void *data;
 
   if (id < 0) {
-    return ERR_NOT_EXIST_IMAGE;
+    return;
   }
   if (index < 0) {
-    return ERR_FRAME_INDEX_OUT_OF_RANGE;
+    return;
   }
 
   int32_t result;
   if ((result = AndroidBitmap_lockPixels(env, bitmap, &data)) < 0) {
     LOGE("Error in AndroidBitmap_lockPixels. errorCode: %d", result);
-    return ERR_BITMAP_OPERATION;
+    return;
   }
 
   AndroidBitmapInfo info;
   if ((result = AndroidBitmap_getInfo(env, bitmap, &info)) < 0) {
     LOGE("Error in AndroidBitmap_getInfo. errorCode: %d", result);
-    return ERR_BITMAP_OPERATION;
+    return;
   }
 
   std::shared_ptr<ApngImage> image = nullptr;
@@ -190,28 +202,16 @@ Java_com_linecorp_apng_decoder_ApngDecoderJni_draw(
 
   if (!image) {
     AndroidBitmap_unlockPixels(env, bitmap);
-    return ERR_NOT_EXIST_IMAGE;
+    return;
   }
 
   std::shared_ptr<ApngFrame> frame = image->getFrame(static_cast<const uint32_t>(index));
   if (!frame) {
     AndroidBitmap_unlockPixels(env, bitmap);
-    return ERR_FRAME_INDEX_OUT_OF_RANGE;
+    return;
   }
   memcpy(data, frame->getRawPixels(), image->getFrameByteCount());
-  size_t duration = frame->getDuration();
-
   AndroidBitmap_unlockPixels(env, bitmap);
-
-  if (result < 0) {
-    return result;
-  }
-
-  if (duration > 0) {
-    return static_cast<jint>(duration);
-  }
-
-  return SUCCESS;
 }
 
 JNIEXPORT jint JNICALL
@@ -258,8 +258,18 @@ Java_com_linecorp_apng_decoder_ApngDecoderJni_copy(
   env->SetIntField(result, gResult_heightFieldID, copyPtr->getHeight());
   env->SetIntField(result, gResult_frameCountFieldID, copyPtr->getFrameCount());
   env->SetIntField(result, gResult_repeatCountFieldID, copyPtr->getRepeatCount());
-  env->SetIntField(result, gResult_durationFieldID, copyPtr->getTotalDuration());
   env->SetLongField(result, gResult_allFrameByteCountFieldID, copyPtr->getAllFrameByteCount());
+
+  {
+    uint32_t frame_count = copyPtr->getFrameCount();
+    jintArray frame_durations = env->NewIntArray(frame_count);
+    if (!frame_durations) {
+      return ERR_OUT_OF_MEMORY;
+    }
+    copyFrameDurations(env, copyPtr, frame_durations);
+    env->SetObjectField(result, gResult_frameDurationsFieldID, frame_durations);
+    env->DeleteLocalRef(frame_durations);
+  }
 
   int32_t resultId = ++gIdCounter;
   gImageMap.emplace(resultId, std::move(copyPtr));
@@ -270,4 +280,23 @@ Java_com_linecorp_apng_decoder_ApngDecoderJni_copy(
 
 #pragma clang diagnostic pop
 }
+
+bool copyFrameDurations(JNIEnv *env,
+                        const std::shared_ptr<ApngImage> &image,
+                        jintArray &frame_durations_ptr) {
+  uint32_t frame_count = image->getFrameCount();
+  jint *frame_durations_array = env->GetIntArrayElements(frame_durations_ptr, nullptr);
+  bool isSuccess = true;
+  for (uint32_t i = 0; i < frame_count; ++i) {
+    std::shared_ptr<ApngFrame> frame = image->getFrame(i);
+    if (!frame) {
+      isSuccess = false;
+      break;
+    }
+    frame_durations_array[i] = frame->getDuration();
+  }
+  env->ReleaseIntArrayElements(frame_durations_ptr, frame_durations_array, 0);
+  return isSuccess;
+}
+
 }

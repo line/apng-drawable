@@ -50,8 +50,11 @@ class ApngDrawableTest {
         MockitoAnnotations.initMocks(this)
         whenever(nBitmapAnimation.width).thenReturn(200)
         whenever(nBitmapAnimation.height).thenReturn(100)
-        whenever(nBitmapAnimation.duration).thenReturn(100)
         whenever(nBitmapAnimation.frameCount).thenReturn(10)
+        whenever(nBitmapAnimation.frameDurations).thenReturn(
+            intArrayOf(10, 10, 5, 20, 5, 10, 10, 10, 10, 10)
+        )
+        whenever(nBitmapAnimation.duration).thenReturn(100)
         whenever(nBitmapAnimation.loopCount).thenReturn(2)
         currentTimeProvider = CurrentTimeProvider(0L)
         target = ApngDrawable(
@@ -108,6 +111,26 @@ class ApngDrawableTest {
         target.draw(canvas)
         verify(nBitmapAnimation, times(1)).drawWithIndex(
             eq(1),
+            eq(canvas),
+            anyOrNull(),
+            eq(Rect(0, 0, 200, 100)),
+            any()
+        )
+
+        currentTimeProvider.currentTimeMillis = 24L
+        target.draw(canvas)
+        verify(nBitmapAnimation, times(1)).drawWithIndex(
+            eq(2),
+            eq(canvas),
+            anyOrNull(),
+            eq(Rect(0, 0, 200, 100)),
+            any()
+        )
+
+        currentTimeProvider.currentTimeMillis = 25L
+        target.draw(canvas)
+        verify(nBitmapAnimation, times(1)).drawWithIndex(
+            eq(3),
             eq(canvas),
             anyOrNull(),
             eq(Rect(0, 0, 200, 100)),
