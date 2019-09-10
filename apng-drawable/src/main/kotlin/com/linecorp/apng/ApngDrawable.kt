@@ -125,12 +125,10 @@ class ApngDrawable @VisibleForTesting internal constructor(
      * total duration of this image's animation, returns always last frame index.
      */
     val currentFrameIndex: Int
-        get() = if (loopCount != LOOP_FOREVER && exceedsRepeatCountLimitation()) {
-            frameCount - 1
-        } else {
-            val durationInSingleLoop = animationElapsedTimeMillis % durationMillis
-            val index = frameStartTimes.indexOfFirst { durationInSingleLoop < it } - 1
-            if (index < 0) frameCount - 1 else index
+        get() {
+            var progressMillisInCurrentLoop = animationElapsedTimeMillis % durationMillis
+            progressMillisInCurrentLoop += if (exceedsRepeatCountLimitation()) durationMillis else 0
+            return calculateCurrentFrameIndex(0, frameCount - 1, progressMillisInCurrentLoop)
         }
 
     private val currentRepeatCountInternal: Int
@@ -343,6 +341,35 @@ class ApngDrawable @VisibleForTesting internal constructor(
         scaledWidth = scaleFromDensity(apngState.width, apngState.sourceDensity, targetDensity)
         scaledHeight = scaleFromDensity(apngState.height, apngState.sourceDensity, targetDensity)
         bounds.set(0, 0, scaledWidth, scaledHeight)
+    }
+
+    private tailrec fun calculateCurrentFrameIndex(
+        lowerBoundIndex: Int,
+        upperBoundIndex: Int,
+        progressMillisInCurrentLoop: Long
+    ): Int {
+        val middleIndex = (lowerBoundIndex + upperBoundIndex) / 2
+        return when {
+            // Continue searching in the upper half
+            frameStartTimes.size > middleIndex + 1 &&
+                    progressMillisInCurrentLoop >= frameStartTimes[middleIndex + 1] ->
+                calculateCurrentFrameIndex(
+                    middleIndex + 1,
+                    upperBoundIndex,
+                    progressMillisInCurrentLoop
+                )
+
+            // Continue searching in the lower half
+            lowerBoundIndex != upperBoundIndex &&
+                    progressMillisInCurrentLoop < frameStartTimes[middleIndex] ->
+                calculateCurrentFrameIndex(
+                    lowerBoundIndex,
+                    middleIndex,
+                    progressMillisInCurrentLoop
+                )
+
+            else -> middleIndex
+        }
     }
 
     internal class ApngState(
