@@ -43,13 +43,5 @@ void ApngImage::setFrame(const uint32_t index, std::unique_ptr<ApngFrame> frame)
   }
   mFrames[index] = std::move(frame);
 }
-
-uint32_t ApngImage::getTotalDuration() const {
-  uint32_t totalDuration = 0;
-  for (uint32_t i = 0; i < mFrameCount; i++) {
-    totalDuration += mFrames[i]->getDuration();
-  }
-  return totalDuration;
-}
 }
 
