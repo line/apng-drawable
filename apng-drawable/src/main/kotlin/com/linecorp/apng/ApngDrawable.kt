@@ -115,14 +115,8 @@ class ApngDrawable @VisibleForTesting internal constructor(
             if (currentRepeatCountInternal > loopCount) loopCount else currentRepeatCountInternal
 
     /**
-     * [currentFrameIndex] is the index to indicate which frame should show at that time.
-     * [currentFrameIndex] is calculated with APNG meta data and elapsed time after animation
-     * started.
-     * [durationMillis] is the duration to animate one loop of APNG animation. [frameCount]
-     * is number of APNG frames. For example, if one loop duration is 1000ms, image count is 10 and
-     * elapsed time is 2100ms, the frame index should be 1 of 3rd loop.
-     * If this image isn't infinite looping image and [animationElapsedTimeMillis] is larger than
-     * total duration of this image's animation, returns always last frame index.
+     * The corresponding frame index with the elapsed time of the animation. This value indicates
+     * the last frame after the animation finished.
      */
     val currentFrameIndex: Int
         get() {
