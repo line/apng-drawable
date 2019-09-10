@@ -41,7 +41,7 @@ static jfieldID gResult_repeatCountFieldID;
 static jfieldID gResult_frameDurationsFieldID;
 static jfieldID gResult_allFrameByteCountFieldID;
 
-bool copyFrameDurations(JNIEnv *env,
+void copyFrameDurations(JNIEnv *env,
                         const std::shared_ptr<ApngImage> &image,
                         jintArray &frame_durations_ptr);
 
@@ -281,22 +281,19 @@ Java_com_linecorp_apng_decoder_ApngDecoderJni_copy(
 #pragma clang diagnostic pop
 }
 
-bool copyFrameDurations(JNIEnv *env,
+void copyFrameDurations(JNIEnv *env,
                         const std::shared_ptr<ApngImage> &image,
                         jintArray &frame_durations_ptr) {
   uint32_t frame_count = image->getFrameCount();
   jint *frame_durations_array = env->GetIntArrayElements(frame_durations_ptr, nullptr);
-  bool isSuccess = true;
   for (uint32_t i = 0; i < frame_count; ++i) {
     std::shared_ptr<ApngFrame> frame = image->getFrame(i);
     if (!frame) {
-      isSuccess = false;
       break;
     }
     frame_durations_array[i] = frame->getDuration();
   }
   env->ReleaseIntArrayElements(frame_durations_ptr, frame_durations_array, 0);
-  return isSuccess;
 }
 
 }

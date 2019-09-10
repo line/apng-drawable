@@ -29,7 +29,6 @@ class ApngImage {
   ApngImage() = delete;
   uint32_t getWidth() const { return mWidth; }
   uint32_t getHeight() const { return mHeight; }
-  uint32_t getTotalDuration() const;
   uint32_t getRepeatCount() const { return mLoopCount; }
   uint32_t getFrameCount() const { return mFrameCount; }
   uint32_t getFrameByteCount() const { return sizeof(uint32_t) * mWidth * mHeight; }

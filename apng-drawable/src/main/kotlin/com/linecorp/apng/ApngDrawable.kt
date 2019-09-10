@@ -93,10 +93,8 @@ class ApngDrawable @VisibleForTesting internal constructor(
     @IntRange(from = LOOP_INTRINSIC.toLong(), to = Int.MAX_VALUE.toLong())
     var loopCount: Int = apngState.apng.loopCount
         set(value) {
-            if (value < LOOP_INTRINSIC) {
-                throw IllegalArgumentException(
-                    "`loopCount` must be a signed value or special values. (value = $value)"
-                )
+            require(value >= LOOP_INTRINSIC) {
+                "`loopCount` must be a signed value or special values. (value = $value)"
             }
             field = if (value == LOOP_INTRINSIC) apngState.apng.loopCount else value
         }
@@ -115,22 +113,14 @@ class ApngDrawable @VisibleForTesting internal constructor(
             if (currentRepeatCountInternal > loopCount) loopCount else currentRepeatCountInternal
 
     /**
-     * [currentFrameIndex] is the index to indicate which frame should show at that time.
-     * [currentFrameIndex] is calculated with APNG meta data and elapsed time after animation
-     * started.
-     * [durationMillis] is the duration to animate one loop of APNG animation. [frameCount]
-     * is number of APNG frames. For example, if one loop duration is 1000ms, image count is 10 and
-     * elapsed time is 2100ms, the frame index should be 1 of 3rd loop.
-     * If this image isn't infinite looping image and [animationElapsedTimeMillis] is larger than
-     * total duration of this image's animation, returns always last frame index.
+     * The corresponding frame index with the elapsed time of the animation. This value indicates
+     * the last frame after the animation finished.
      */
     val currentFrameIndex: Int
-        get() = if (loopCount != LOOP_FOREVER && exceedsRepeatCountLimitation()) {
-            frameCount - 1
-        } else {
-            val durationInSingleLoop = animationElapsedTimeMillis % durationMillis
-            val index = frameStartTimes.indexOfFirst { durationInSingleLoop < it } - 1
-            if (index < 0) frameCount - 1 else index
+        get() {
+            var progressMillisInCurrentLoop = animationElapsedTimeMillis % durationMillis
+            progressMillisInCurrentLoop += if (exceedsRepeatCountLimitation()) durationMillis else 0
+            return calculateCurrentFrameIndex(0, frameCount - 1, progressMillisInCurrentLoop)
         }
 
     private val currentRepeatCountInternal: Int
@@ -343,6 +333,35 @@ class ApngDrawable @VisibleForTesting internal constructor(
         scaledWidth = scaleFromDensity(apngState.width, apngState.sourceDensity, targetDensity)
         scaledHeight = scaleFromDensity(apngState.height, apngState.sourceDensity, targetDensity)
         bounds.set(0, 0, scaledWidth, scaledHeight)
+    }
+
+    private tailrec fun calculateCurrentFrameIndex(
+        lowerBoundIndex: Int,
+        upperBoundIndex: Int,
+        progressMillisInCurrentLoop: Long
+    ): Int {
+        val middleIndex = (lowerBoundIndex + upperBoundIndex) / 2
+        return when {
+            // Continue searching in the upper half
+            frameStartTimes.size > middleIndex + 1 &&
+                    progressMillisInCurrentLoop >= frameStartTimes[middleIndex + 1] ->
+                calculateCurrentFrameIndex(
+                    middleIndex + 1,
+                    upperBoundIndex,
+                    progressMillisInCurrentLoop
+                )
+
+            // Continue searching in the lower half
+            lowerBoundIndex != upperBoundIndex &&
+                    progressMillisInCurrentLoop < frameStartTimes[middleIndex] ->
+                calculateCurrentFrameIndex(
+                    lowerBoundIndex,
+                    middleIndex,
+                    progressMillisInCurrentLoop
+                )
+
+            else -> middleIndex
+        }
     }
 
     internal class ApngState(
