@@ -93,10 +93,8 @@ class ApngDrawable @VisibleForTesting internal constructor(
     @IntRange(from = LOOP_INTRINSIC.toLong(), to = Int.MAX_VALUE.toLong())
     var loopCount: Int = apngState.apng.loopCount
         set(value) {
-            if (value < LOOP_INTRINSIC) {
-                throw IllegalArgumentException(
-                    "`loopCount` must be a signed value or special values. (value = $value)"
-                )
+            require(value >= LOOP_INTRINSIC) {
+                "`loopCount` must be a signed value or special values. (value = $value)"
             }
             field = if (value == LOOP_INTRINSIC) apngState.apng.loopCount else value
         }
