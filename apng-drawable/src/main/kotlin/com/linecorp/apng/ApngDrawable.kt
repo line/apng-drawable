@@ -170,19 +170,15 @@ class ApngDrawable @VisibleForTesting internal constructor(
         if (isStarted) {
             progressAnimationElapsedTime()
         }
-        val drawingFrameIndex = currentFrameIndex
         apngState.apng.drawWithIndex(
-            drawingFrameIndex,
+            currentFrameIndex,
             canvas,
             null,
             bounds,
             paint
         )
         if (isStarted) {
-            scheduleSelf(
-                { invalidateSelf() },
-                apngState.apng.frameDurations[drawingFrameIndex].toLong()
-            )
+            invalidateSelf()
         }
     }
 
