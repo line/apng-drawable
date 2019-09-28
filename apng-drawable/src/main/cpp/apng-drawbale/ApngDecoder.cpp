@@ -334,13 +334,13 @@ bool ApngDecoder::isApng(std::unique_ptr<StreamSource> source) {
   png_infop info_ptr = png_create_info_struct(png_ptr);
   if (!png_ptr || !info_ptr) {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
-    return ERR_OUT_OF_MEMORY;
+    return false;
   }
 
   // Point to handle error (Read header and acTL)
   if (setjmp(png_jmpbuf(png_ptr)) != 0) { // NOLINT(cert-err52-cpp)
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
-    return ERR_INVALID_FILE_FORMAT;
+    return false;
   }
 
   // Read header
