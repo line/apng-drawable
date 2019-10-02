@@ -28,15 +28,17 @@ object Versions {
 
 object Libs {
     // Library
-    val androidxAppcompat = "androidx.appcompat:appcompat:${Versions.androidxAppCompatVersion}"
-    val androidxAnnotation = "androidx.annotation:annotation:${Versions.androidxAnnotationVersion}"
-    val androidxVectorDrawable =
+    const val androidxAppcompat =
+        "androidx.appcompat:appcompat:${Versions.androidxAppCompatVersion}"
+    const val androidxAnnotation =
+        "androidx.annotation:annotation:${Versions.androidxAnnotationVersion}"
+    const val androidxVectorDrawable =
         "androidx.vectordrawable:vectordrawable-animated:${Versions.androidxAnimatedVectorDrawable}"
-    val androidxConstraintLayout =
+    const val androidxConstraintLayout =
         "androidx.constraintlayout:constraintlayout:${Versions.androidxConstraintLayoutVersion}"
-    val junit = "junit:junit:${Versions.junitVersion}"
-    val robolectric = "org.robolectric:robolectric:${Versions.robolectricVersion}"
-    val mockitoInline = "org.mockito:mockito-inline:${Versions.mockitoVersion}"
-    val mockitoKotlin =
+    const val junit = "junit:junit:${Versions.junitVersion}"
+    const val robolectric = "org.robolectric:robolectric:${Versions.robolectricVersion}"
+    const val mockitoInline = "org.mockito:mockito-inline:${Versions.mockitoVersion}"
+    const val mockitoKotlin =
         "com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.mockitoKotlinVersion}"
 }
