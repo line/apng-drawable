@@ -1,5 +1,4 @@
 import com.jfrog.bintray.gradle.BintrayExtension
-import org.apache.maven.artifact.ant.InstallTask
 import org.gradle.api.internal.plugins.DslObject
 import org.jetbrains.dokka.gradle.DokkaAndroidTask
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
@@ -9,11 +8,11 @@ import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 plugins {
     id("com.android.library")
     id("kotlin-android")
-    id("org.jlleitschuh.gradle.ktlint")
-    id("org.jetbrains.dokka-android")
-    id("com.jfrog.bintray")
-    id("com.github.dcendents.android-maven")
-    id("com.github.ben-manes.versions")
+    id("org.jlleitschuh.gradle.ktlint") version Versions.ktlintGradleVersion
+    id("org.jetbrains.dokka-android") version Versions.dokkaVersion
+    id("com.jfrog.bintray") version Versions.bintrayGradlePluginVersion
+    id("com.github.dcendents.android-maven") version Versions.androidMavenGradlePluginVersion
+    id("com.github.ben-manes.versions") version Versions.gradleVersionsPluginVersion
 }
 
 group = Consts.groupId

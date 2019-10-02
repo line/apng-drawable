@@ -27,18 +27,6 @@ object Versions {
 }
 
 object Libs {
-    // Plugin
-    val androidGradlePlugin = "com.android.tools.build:gradle:${Versions.androidPluginVersion}"
-    val dokkaAndroidGradlePlugin =
-        "org.jetbrains.dokka:dokka-android-gradle-plugin:${Versions.dokkaVersion}"
-    val ktlintGradlePlugin = "org.jlleitschuh.gradle:ktlint-gradle:${Versions.ktlintGradleVersion}"
-    val bintrayGradlePlugin =
-        "com.jfrog.bintray.gradle:gradle-bintray-plugin:${Versions.bintrayGradlePluginVersion}"
-    val androidManvenGradlePlugin =
-        "com.github.dcendents:android-maven-gradle-plugin:${Versions.androidMavenGradlePluginVersion}"
-    val gradleVersionsPlugin =
-        "com.github.ben-manes:gradle-versions-plugin:${Versions.gradleVersionsPluginVersion}"
-
     // Library
     val androidxAppcompat = "androidx.appcompat:appcompat:${Versions.androidxAppCompatVersion}"
     val androidxAnnotation = "androidx.annotation:annotation:${Versions.androidxAnnotationVersion}"

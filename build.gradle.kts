@@ -1,18 +1,7 @@
-buildscript {
-    repositories {
-        google()
-        jcenter()
-        maven("https://plugins.gradle.org/m2/")
-    }
-    dependencies {
-        classpath(Libs.androidGradlePlugin)
-        classpath(kotlin("gradle-plugin", version = Versions.kotlinVersion))
-        classpath(Libs.dokkaAndroidGradlePlugin)
-        classpath(Libs.ktlintGradlePlugin)
-        classpath(Libs.bintrayGradlePlugin)
-        classpath(Libs.androidManvenGradlePlugin)
-        classpath(Libs.gradleVersionsPlugin)
-    }
+plugins {
+    id("com.android.application") version Versions.androidPluginVersion apply false
+    id("com.android.library") version Versions.androidPluginVersion apply false
+    id("kotlin-android") version Versions.kotlinVersion apply false
 }
 
 allprojects {
