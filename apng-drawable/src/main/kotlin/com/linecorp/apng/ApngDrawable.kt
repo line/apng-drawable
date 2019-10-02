@@ -71,6 +71,11 @@ class ApngDrawable @VisibleForTesting internal constructor(
     val frameCount: Int = apngState.apng.frameCount
 
     /**
+     * A list of time to draw each frame in milliseconds.
+     */
+    val frameDurations: List<Int> = apngState.apng.frameDurations.toList()
+
+    /**
      * The number of bytes required for the non-native layer.
      * In most cases, this is the number of bytes used to display one frame.
      */

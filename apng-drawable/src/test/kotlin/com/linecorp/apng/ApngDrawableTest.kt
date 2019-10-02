@@ -252,6 +252,11 @@ class ApngDrawableTest {
         }
     }
 
+    @Test
+    fun testFrameDurations() {
+        assertEquals(target.frameDurations, listOf(10, 10, 5, 20, 5, 10, 10, 10, 10, 10))
+    }
+
     private class CurrentTimeProvider(var currentTimeMillis: Long) {
         fun provide(): Long = currentTimeMillis
     }
