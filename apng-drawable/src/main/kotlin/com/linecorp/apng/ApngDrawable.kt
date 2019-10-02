@@ -262,6 +262,32 @@ class ApngDrawable @VisibleForTesting internal constructor(
     }
 
     /**
+     * Seeks frame to given frame index with loop index.
+     *
+     * @param loopIndex The target loop index to seek. 0 is the first loop.
+     * @param frameIndex The target frame index to seek. 0 is the first frame.
+     * @throws IllegalArgumentException Thrown when matches one of the following conditions.
+     *  - If [loopIndex] is less than 0, equals to [loopCount] or over [loopCount].
+     *  - If [frameIndex] is less than 0, equals to [frameCount] or over [frameCount].
+     */
+    fun seekToFrame(
+        @IntRange(from = 0L, to = Int.MAX_VALUE.toLong()) loopIndex: Int,
+        @IntRange(from = 0L, to = Int.MAX_VALUE.toLong()) frameIndex: Int
+    ) {
+        require(loopIndex >= 0) { "loopIndex must be positive value" }
+        require(frameIndex >= 0) { "frameIndex must be positive value" }
+        require(loopIndex < loopCount) {
+            "loopIndex must be less than loopCount." +
+                    " loopIndex = $loopIndex, loopCount = $loopCount."
+        }
+        require(frameIndex < frameCount) {
+            "frameIndex must be less than frameCount." +
+                    " frameIndex = $frameIndex, frameCount = $frameCount."
+        }
+        seekTo(loopIndex * durationMillis.toLong() + frameStartTimes[frameIndex])
+    }
+
+    /**
      * Releases resources managed by the native layer.
      * Call this image when it is no longer used.
      */
