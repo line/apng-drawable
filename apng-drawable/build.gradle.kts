@@ -1,31 +1,28 @@
 import com.jfrog.bintray.gradle.BintrayExtension
-import org.apache.maven.artifact.ant.InstallTask
 import org.gradle.api.internal.plugins.DslObject
 import org.jetbrains.dokka.gradle.DokkaAndroidTask
-import org.jetbrains.kotlin.config.KotlinCompilerVersion
-import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     id("com.android.library")
     id("kotlin-android")
-    id("org.jlleitschuh.gradle.ktlint")
-    id("org.jetbrains.dokka-android")
-    id("com.jfrog.bintray")
-    id("com.github.dcendents.android-maven")
-    id("com.github.ben-manes.versions")
+    id("org.jlleitschuh.gradle.ktlint") version Versions.ktlintGradleVersion
+    id("org.jetbrains.dokka-android") version Versions.dokkaVersion
+    id("com.jfrog.bintray") version Versions.bintrayGradlePluginVersion
+    id("com.github.dcendents.android-maven") version Versions.androidMavenGradlePluginVersion
+    id("com.github.ben-manes.versions") version Versions.gradleVersionsPluginVersion
 }
 
-group = Consts.groupId
-version = Consts.artifactId
+group = ModuleConfig.groupId
+version = ModuleConfig.artifactId
 
 android {
     defaultConfig {
         minSdkVersion(Versions.minSdkVersion)
         compileSdkVersion(Versions.compileSdkVersion)
         targetSdkVersion(Versions.targetSdkVersion)
-        versionName = Consts.version
-        version = Consts.version
+        versionName = ModuleConfig.version
+        version = ModuleConfig.version
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles(
             file("proguard-rules.pro")
@@ -78,7 +75,7 @@ android {
     }
 }
 
-configure<KtlintExtension> {
+ktlint {
     android.set(true)
     reporters.set(setOf(ReporterType.CHECKSTYLE))
     ignoreFailures.set(true)
@@ -94,9 +91,8 @@ tasks.withType(DokkaAndroidTask::class.java) {
     jdkVersion = 7
 }
 
-
 dependencies {
-    api(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
+    api(kotlin("stdlib-jdk7", Versions.kotlinVersion))
     api(Libs.androidxAnnotation)
     api(Libs.androidxVectorDrawable)
 
@@ -112,16 +108,16 @@ bintray {
     setConfigurations("archives")
 
     pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
-        repo = Consts.bintrayRepo
-        name = Consts.bintrayName
-        userOrg = Consts.bintrayUserOrg
+        repo = ModuleConfig.bintrayRepo
+        name = ModuleConfig.bintrayName
+        userOrg = ModuleConfig.bintrayUserOrg
         setLicenses("Apache-2.0")
-        websiteUrl = Consts.siteUrl
-        issueTrackerUrl = Consts.issueTrackerUrl
-        vcsUrl = Consts.vcsUrl
+        websiteUrl = ModuleConfig.siteUrl
+        issueTrackerUrl = ModuleConfig.issueTrackerUrl
+        vcsUrl = ModuleConfig.vcsUrl
         publicDownloadNumbers = true
         version = VersionConfig().apply {
-            name = Consts.version
+            name = ModuleConfig.version
         }
     })
 }
@@ -138,9 +134,9 @@ tasks.getByName("install", Upload::class).apply {
             pom {
                 project {
                     packaging = "aar"
-                    groupId = Consts.groupId
-                    artifactId = Consts.artifactId
-                    version = Consts.version
+                    groupId = ModuleConfig.groupId
+                    artifactId = ModuleConfig.artifactId
+                    version = ModuleConfig.version
                 }
             }
         }

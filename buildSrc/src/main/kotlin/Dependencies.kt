@@ -27,28 +27,18 @@ object Versions {
 }
 
 object Libs {
-    // Plugin
-    val androidGradlePlugin = "com.android.tools.build:gradle:${Versions.androidPluginVersion}"
-    val dokkaAndroidGradlePlugin =
-        "org.jetbrains.dokka:dokka-android-gradle-plugin:${Versions.dokkaVersion}"
-    val ktlintGradlePlugin = "org.jlleitschuh.gradle:ktlint-gradle:${Versions.ktlintGradleVersion}"
-    val bintrayGradlePlugin =
-        "com.jfrog.bintray.gradle:gradle-bintray-plugin:${Versions.bintrayGradlePluginVersion}"
-    val androidManvenGradlePlugin =
-        "com.github.dcendents:android-maven-gradle-plugin:${Versions.androidMavenGradlePluginVersion}"
-    val gradleVersionsPlugin =
-        "com.github.ben-manes:gradle-versions-plugin:${Versions.gradleVersionsPluginVersion}"
-
     // Library
-    val androidxAppcompat = "androidx.appcompat:appcompat:${Versions.androidxAppCompatVersion}"
-    val androidxAnnotation = "androidx.annotation:annotation:${Versions.androidxAnnotationVersion}"
-    val androidxVectorDrawable =
+    const val androidxAppcompat =
+        "androidx.appcompat:appcompat:${Versions.androidxAppCompatVersion}"
+    const val androidxAnnotation =
+        "androidx.annotation:annotation:${Versions.androidxAnnotationVersion}"
+    const val androidxVectorDrawable =
         "androidx.vectordrawable:vectordrawable-animated:${Versions.androidxAnimatedVectorDrawable}"
-    val androidxConstraintLayout =
+    const val androidxConstraintLayout =
         "androidx.constraintlayout:constraintlayout:${Versions.androidxConstraintLayoutVersion}"
-    val junit = "junit:junit:${Versions.junitVersion}"
-    val robolectric = "org.robolectric:robolectric:${Versions.robolectricVersion}"
-    val mockitoInline = "org.mockito:mockito-inline:${Versions.mockitoVersion}"
-    val mockitoKotlin =
+    const val junit = "junit:junit:${Versions.junitVersion}"
+    const val robolectric = "org.robolectric:robolectric:${Versions.robolectricVersion}"
+    const val mockitoInline = "org.mockito:mockito-inline:${Versions.mockitoVersion}"
+    const val mockitoKotlin =
         "com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.mockitoKotlinVersion}"
 }
