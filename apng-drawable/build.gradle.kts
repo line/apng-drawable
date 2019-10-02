@@ -2,7 +2,6 @@ import com.jfrog.bintray.gradle.BintrayExtension
 import org.gradle.api.internal.plugins.DslObject
 import org.jetbrains.dokka.gradle.DokkaAndroidTask
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
-import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
@@ -77,7 +76,7 @@ android {
     }
 }
 
-configure<KtlintExtension> {
+ktlint {
     android.set(true)
     reporters.set(setOf(ReporterType.CHECKSTYLE))
     ignoreFailures.set(true)
@@ -92,7 +91,6 @@ tasks.withType(DokkaAndroidTask::class.java) {
     includes = listOf("doc/module_package.md")
     jdkVersion = 7
 }
-
 
 dependencies {
     api(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
