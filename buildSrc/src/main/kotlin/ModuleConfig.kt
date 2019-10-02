@@ -1,4 +1,4 @@
-object Consts {
+object ModuleConfig {
     const val version = "1.8.1"
     const val groupId = "com.linecorp"
     const val artifactId = "apng"

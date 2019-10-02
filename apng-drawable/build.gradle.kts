@@ -15,16 +15,16 @@ plugins {
     id("com.github.ben-manes.versions") version Versions.gradleVersionsPluginVersion
 }
 
-group = Consts.groupId
-version = Consts.artifactId
+group = ModuleConfig.groupId
+version = ModuleConfig.artifactId
 
 android {
     defaultConfig {
         minSdkVersion(Versions.minSdkVersion)
         compileSdkVersion(Versions.compileSdkVersion)
         targetSdkVersion(Versions.targetSdkVersion)
-        versionName = Consts.version
-        version = Consts.version
+        versionName = ModuleConfig.version
+        version = ModuleConfig.version
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles(
             file("proguard-rules.pro")
@@ -111,16 +111,16 @@ bintray {
     setConfigurations("archives")
 
     pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
-        repo = Consts.bintrayRepo
-        name = Consts.bintrayName
-        userOrg = Consts.bintrayUserOrg
+        repo = ModuleConfig.bintrayRepo
+        name = ModuleConfig.bintrayName
+        userOrg = ModuleConfig.bintrayUserOrg
         setLicenses("Apache-2.0")
-        websiteUrl = Consts.siteUrl
-        issueTrackerUrl = Consts.issueTrackerUrl
-        vcsUrl = Consts.vcsUrl
+        websiteUrl = ModuleConfig.siteUrl
+        issueTrackerUrl = ModuleConfig.issueTrackerUrl
+        vcsUrl = ModuleConfig.vcsUrl
         publicDownloadNumbers = true
         version = VersionConfig().apply {
-            name = Consts.version
+            name = ModuleConfig.version
         }
     })
 }
@@ -137,9 +137,9 @@ tasks.getByName("install", Upload::class).apply {
             pom {
                 project {
                     packaging = "aar"
-                    groupId = Consts.groupId
-                    artifactId = Consts.artifactId
-                    version = Consts.version
+                    groupId = ModuleConfig.groupId
+                    artifactId = ModuleConfig.artifactId
+                    version = ModuleConfig.version
                 }
             }
         }
