@@ -1,7 +1,6 @@
 import com.jfrog.bintray.gradle.BintrayExtension
 import org.gradle.api.internal.plugins.DslObject
 import org.jetbrains.dokka.gradle.DokkaAndroidTask
-import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
@@ -93,7 +92,7 @@ tasks.withType(DokkaAndroidTask::class.java) {
 }
 
 dependencies {
-    api(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
+    api(kotlin("stdlib-jdk7", Versions.kotlinVersion))
     api(Libs.androidxAnnotation)
     api(Libs.androidxVectorDrawable)
 
