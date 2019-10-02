@@ -32,6 +32,7 @@ import androidx.annotation.RawRes
 import androidx.annotation.VisibleForTesting
 import androidx.annotation.WorkerThread
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
+import com.linecorp.apng.ApngDrawable.ApngState
 import com.linecorp.apng.ApngDrawable.Companion.decode
 import com.linecorp.apng.decoder.Apng
 import com.linecorp.apng.decoder.ApngException
@@ -43,12 +44,12 @@ import java.io.InputStream
 /**
  * An animated [Drawable] that plays the frames of an animated PNG.
  *
- * This drawable holds [apng] which contains the width, height, image count, duration
+ * This drawable holds [ApngState.apng] which contains the width, height, image count, duration
  * and repeat count from APNG meta data. These meta data can be obtained with [decode]
  * function.
  *
- * Also [apng] has other responsibility to draw given frame to a canvas. [ApngDrawable]
- * delegates [apng] to draw a frame.
+ * Also [ApngState.apng] has other responsibility to draw given frame to a canvas. [ApngDrawable]
+ * delegates [ApngState.apng] to draw a frame.
  */
 class ApngDrawable @VisibleForTesting internal constructor(
     /**
@@ -138,7 +139,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
 
     /**
      * The density scale at which this drawable will be rendered.
-     * If [sourceDensity] is [Bitmap.DENSITY_NONE], this value is ignored.
+     * If [ApngState.sourceDensity] is [Bitmap.DENSITY_NONE], this value is ignored.
      */
     private var targetDensity: Int = DisplayMetrics.DENSITY_DEFAULT
         set(value) {
@@ -229,9 +230,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
 
     override fun clearAnimationCallbacks() = animationCallbacks.clear()
 
-    override fun getConstantState(): ConstantState? {
-        return apngState
-    }
+    override fun getConstantState(): ConstantState? = apngState
 
     override fun mutate(): Drawable {
         apngState = ApngState(apngState)
@@ -240,7 +239,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
 
     /**
      * Sets the density scale at which this drawable will be rendered.
-     * If [sourceDensity] is [Bitmap.DENSITY_NONE], this value is ignored.
+     * If [ApngState.sourceDensity] is [Bitmap.DENSITY_NONE], this value is ignored.
      *
      * @param metrics The [DisplayMetrics] indicating the density scale for this drawable.
      */
@@ -256,9 +255,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
      * @throws IllegalArgumentException If [positionMillis] is less than 0
      */
     fun seekTo(@IntRange(from = 0L, to = Long.MAX_VALUE) positionMillis: Long) {
-        if (positionMillis < 0) {
-            throw IllegalArgumentException("positionMillis must be positive value")
-        }
+        require(positionMillis >= 0) { "positionMillis must be positive value" }
         animationPrevDrawTimeMillis = null
         animationElapsedTimeMillis = positionMillis
         invalidateSelf()
@@ -546,20 +543,14 @@ class ApngDrawable @VisibleForTesting internal constructor(
             @IntRange(from = 1, to = Int.MAX_VALUE.toLong()) width: Int? = null,
             @IntRange(from = 1, to = Int.MAX_VALUE.toLong()) height: Int? = null
         ): ApngDrawable {
-            if ((width == null) xor (height == null)) {
-                throw IllegalArgumentException(
-                    "Can not specify only one side of size. width = $width, height = $height"
-                )
+            require(!((width == null) xor (height == null))) {
+                "Can not specify only one side of size. width = $width, height = $height"
             }
-            if (width != null && width <= 0) {
-                throw IllegalArgumentException(
-                    "Can not specify 0 or negative as width value. width = $width"
-                )
+            require(!(width != null && width <= 0)) {
+                "Can not specify 0 or negative as width value. width = $width"
             }
-            if (height != null && height <= 0) {
-                throw IllegalArgumentException(
-                    "Can not specify 0 or negative as height value. width = $height"
-                )
+            require(!(height != null && height <= 0)) {
+                "Can not specify 0 or negative as height value. height = $height"
             }
             val density = if (width == null && height == null) {
                 DisplayMetrics.DENSITY_DEFAULT
