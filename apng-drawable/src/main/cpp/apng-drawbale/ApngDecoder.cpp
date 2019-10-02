@@ -25,8 +25,8 @@
 
 namespace apng_drawable {
 
-const uint8_t ALPHA_TRANSPARENT = 0u;
-const uint8_t ALPHA_OPAQUE = 0xFFu;
+const uint8_t ALPHA_TRANSPARENT = 0U;
+const uint8_t ALPHA_OPAQUE = 0xFFU;
 const size_t CHANNEL_4_BYTE_SIZE = sizeof(uint8_t) * 4;
 
 inline void saveFrame(uint32_t *destination,
@@ -44,7 +44,7 @@ inline void saveFrame(uint32_t *destination,
     for (uint32_t i = 0; i < width; ++i) {
       // pre multiply color
       src_color = destination[i];
-      alpha = static_cast<uint_fast8_t>((src_color >> 24u) & 0xFFu);
+      alpha = static_cast<uint_fast8_t>((src_color >> 24U) & 0xFFU);
       if (alpha == ALPHA_TRANSPARENT) {
         // transparent
         destination[i] = 0;
@@ -57,9 +57,9 @@ inline void saveFrame(uint32_t *destination,
       // translucent
       destination[i] = abgr(
           alpha,
-          div255Round(src_color >> 16u & 0xFFu, alpha),
-          div255Round(src_color >> 8u & 0xFFu, alpha),
-          div255Round(src_color & 0xFFu, alpha));
+          div255Round(src_color >> 16U & 0xFFU, alpha),
+          div255Round(src_color >> 8U & 0xFFU, alpha),
+          div255Round(src_color & 0xFFU, alpha));
     }
   }
 }
@@ -266,7 +266,7 @@ std::unique_ptr<ApngImage> ApngDecoder::decode(
                             &dispose_op,
                             &blend_op);
     auto duration =
-        static_cast<size_t>(std::lround(static_cast<float>(delay_num) / delay_den * 1000.f));
+        static_cast<size_t>(std::lround(static_cast<float>(delay_num) / delay_den * 1000F));
     std::unique_ptr<ApngFrame> frame(new ApngFrame(size, duration));
     if (i == first) {
       blend_op = PNG_BLEND_OP_SOURCE;
@@ -334,13 +334,13 @@ bool ApngDecoder::isApng(std::unique_ptr<StreamSource> source) {
   png_infop info_ptr = png_create_info_struct(png_ptr);
   if (!png_ptr || !info_ptr) {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
-    return ERR_OUT_OF_MEMORY;
+    return false;
   }
 
   // Point to handle error (Read header and acTL)
   if (setjmp(png_jmpbuf(png_ptr)) != 0) { // NOLINT(cert-err52-cpp)
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
-    return ERR_INVALID_FILE_FORMAT;
+    return false;
   }
 
   // Read header
