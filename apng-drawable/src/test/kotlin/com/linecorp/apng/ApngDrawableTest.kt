@@ -19,12 +19,14 @@ package com.linecorp.apng
 import android.graphics.Canvas
 import android.graphics.Rect
 import com.linecorp.apng.decoder.Apng
+import com.linecorp.apng.utils.assertFailureMessage
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -202,6 +204,57 @@ class ApngDrawableTest {
             eq(Rect(0, 0, 200, 100)),
             any()
         )
+    }
+
+    @Test
+    fun testSeekToFrame() {
+        target.seekToFrame(0, 0)
+        assertEquals(0, target.currentLoopIndex)
+        assertEquals(0, target.currentFrameIndex)
+
+        target.seekToFrame(0, 3)
+        assertEquals(0, target.currentLoopIndex)
+        assertEquals(3, target.currentFrameIndex)
+
+        target.seekToFrame(1, 0)
+        assertEquals(1, target.currentLoopIndex)
+        assertEquals(0, target.currentFrameIndex)
+
+        target.seekToFrame(1, 3)
+        assertEquals(1, target.currentLoopIndex)
+        assertEquals(3, target.currentFrameIndex)
+
+        target.seekToFrame(1, 9)
+        assertEquals(1, target.currentLoopIndex)
+        assertEquals(9, target.currentFrameIndex)
+    }
+
+    @Test
+    fun testSeekToFrame_error() {
+        assertFailureMessage<IllegalArgumentException>("loopIndex must be positive value") {
+            target.seekToFrame(-1, 0)
+        }
+
+        assertFailureMessage<IllegalArgumentException>("frameIndex must be positive value") {
+            target.seekToFrame(0, -1)
+        }
+
+        assertFailureMessage<IllegalArgumentException>(
+            "loopIndex must be lesser than loopCount. loopIndex = 3, loopCount = 2."
+        ) {
+            target.seekToFrame(3, 0)
+        }
+
+        assertFailureMessage<IllegalArgumentException>(
+            "frameIndex must be lesser than frameCount. frameIndex = 11, frameCount = 10."
+        ) {
+            target.seekToFrame(0, 11)
+        }
+    }
+
+    @Test
+    fun testFrameDurations() {
+        assertEquals(target.frameDurations, listOf(10, 10, 5, 20, 5, 10, 10, 10, 10, 10))
     }
 
     private class CurrentTimeProvider(var currentTimeMillis: Long) {
