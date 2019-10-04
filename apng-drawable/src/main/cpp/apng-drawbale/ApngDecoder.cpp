@@ -266,7 +266,7 @@ std::unique_ptr<ApngImage> ApngDecoder::decode(
                             &dispose_op,
                             &blend_op);
     auto duration =
-        static_cast<size_t>(std::lround(static_cast<float>(delay_num) / delay_den * 1000F));
+        static_cast<size_t>(std::lround(static_cast<float>(delay_num) / delay_den * 1000.F));
     std::unique_ptr<ApngFrame> frame(new ApngFrame(size, duration));
     if (i == first) {
       blend_op = PNG_BLEND_OP_SOURCE;
