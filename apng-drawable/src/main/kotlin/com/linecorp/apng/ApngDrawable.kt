@@ -40,6 +40,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
+import kotlin.math.max
 
 /**
  * An animated [Drawable] that plays the frames of an animated PNG.
@@ -114,9 +115,16 @@ class ApngDrawable @VisibleForTesting internal constructor(
      * The number indicating the current loop number.
      * The first loop is `1` and last loop is same with [loopCount]
      */
+    @Deprecated(message = "Use currentLoopIndex", replaceWith = ReplaceWith("currentLoopIndex + 1"))
     val currentRepeatCount: Int
-        get() =
-            if (currentRepeatCountInternal > loopCount) loopCount else currentRepeatCountInternal
+        get() = currentLoopIndex + 1
+
+    /**
+     * The number indicating the current loop index.
+     * The first loop is `0` and last loop is same with `[loopCount] - 1`
+     */
+    val currentLoopIndex: Int
+        get() = max(currentLoopIndexInternal, loopCount - 1)
 
     /**
      * The corresponding frame index with the elapsed time of the animation. This value indicates
@@ -129,8 +137,8 @@ class ApngDrawable @VisibleForTesting internal constructor(
             return calculateCurrentFrameIndex(0, frameCount - 1, progressMillisInCurrentLoop)
         }
 
-    private val currentRepeatCountInternal: Int
-        get() = (animationElapsedTimeMillis / durationMillis).toInt() + 1
+    private val currentLoopIndexInternal: Int
+        get() = (animationElapsedTimeMillis / durationMillis).toInt()
     private val paint: Paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG)
     private val animationCallbacks: MutableList<Animatable2Compat.AnimationCallback> = arrayListOf()
     private val repeatAnimationCallbacks: MutableList<RepeatAnimationCallback> = arrayListOf()
@@ -325,7 +333,10 @@ class ApngDrawable @VisibleForTesting internal constructor(
                 frameChanged
             ) {
                 repeatAnimationCallbacks.forEach {
-                    it.onRepeat(this, currentRepeatCountInternal + 1)
+                    // TODO: Remove `onRepeat` invocation at the next version.
+                    @Suppress("DEPRECATION")
+                    it.onRepeat(this, currentLoopIndexInternal + 1)
+                    it.onAnimationRepeat(this, currentLoopIndexInternal)
                 }
             }
         }
@@ -341,20 +352,20 @@ class ApngDrawable @VisibleForTesting internal constructor(
 
     private fun isLastFrame(): Boolean = currentFrameIndex == frameCount - 1
 
-    private fun isFirstLoop(): Boolean = currentRepeatCountInternal == 1
+    private fun isFirstLoop(): Boolean = currentLoopIndexInternal == 0
 
     private fun hasNextLoop(): Boolean {
         if (loopCount == LOOP_FOREVER) {
             return true
         }
-        return currentRepeatCountInternal < loopCount
+        return currentLoopIndexInternal < loopCount - 1
     }
 
     private fun exceedsRepeatCountLimitation(): Boolean {
         if (loopCount == LOOP_FOREVER) {
             return false
         }
-        return currentRepeatCountInternal > loopCount
+        return currentLoopIndexInternal > loopCount - 1
     }
 
     private fun computeBitmapSize() {

@@ -209,23 +209,23 @@ class ApngDrawableTest {
     @Test
     fun testSeekToFrame() {
         target.seekToFrame(0, 0)
-        assertEquals(0, target.currentRepeatCount - 1)
+        assertEquals(0, target.currentLoopIndex)
         assertEquals(0, target.currentFrameIndex)
 
         target.seekToFrame(0, 3)
-        assertEquals(0, target.currentRepeatCount - 1)
+        assertEquals(0, target.currentLoopIndex)
         assertEquals(3, target.currentFrameIndex)
 
         target.seekToFrame(1, 0)
-        assertEquals(1, target.currentRepeatCount - 1)
+        assertEquals(1, target.currentLoopIndex)
         assertEquals(0, target.currentFrameIndex)
 
         target.seekToFrame(1, 3)
-        assertEquals(1, target.currentRepeatCount - 1)
+        assertEquals(1, target.currentLoopIndex)
         assertEquals(3, target.currentFrameIndex)
 
         target.seekToFrame(1, 9)
-        assertEquals(1, target.currentRepeatCount - 1)
+        assertEquals(1, target.currentLoopIndex)
         assertEquals(9, target.currentFrameIndex)
     }
 

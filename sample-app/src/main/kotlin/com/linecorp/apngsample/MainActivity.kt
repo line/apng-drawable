@@ -51,13 +51,15 @@ class MainActivity : AppCompatActivity() {
             Log.d("apng", "Animation start")
             text_callback.text = "Animation started"
         }
-        override fun onRepeat(drawable: ApngDrawable, nextLoop: Int) {
+
+        override fun onAnimationRepeat(drawable: ApngDrawable, nextLoopIndex: Int) {
             val loopCount = drawable.loopCount
-            Log.d("apng", "Animation repeat loopCount: $loopCount, nextLoop: $nextLoop")
+            Log.d("apng", "Animation repeat loopCount: $loopCount, nextLoopIndex: $nextLoopIndex")
             text_callback.text = "Animation repeat " +
                     "loopCount: $loopCount, " +
-                    "nextLoop: $nextLoop"
+                    "nextLoopIndex: $nextLoopIndex"
         }
+
         override fun onAnimationEnd(drawable: Drawable?) {
             Log.d("apng", "Animation end")
             text_callback.text = "Animation ended"
