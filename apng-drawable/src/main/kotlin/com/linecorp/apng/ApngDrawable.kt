@@ -40,7 +40,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
-import kotlin.math.max
+import kotlin.math.min
 
 /**
  * An animated [Drawable] that plays the frames of an animated PNG.
@@ -124,7 +124,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
      * The first loop is `0` and last loop is same with `[loopCount] - 1`
      */
     val currentLoopIndex: Int
-        get() = max(currentLoopIndexInternal, loopCount - 1)
+        get() = min(currentLoopIndexInternal, loopCount - 1)
 
     /**
      * The corresponding frame index with the elapsed time of the animation. This value indicates
@@ -335,8 +335,8 @@ class ApngDrawable @VisibleForTesting internal constructor(
                 repeatAnimationCallbacks.forEach {
                     // TODO: Remove `onRepeat` invocation at the next version.
                     @Suppress("DEPRECATION")
-                    it.onRepeat(this, currentLoopIndexInternal + 1)
-                    it.onAnimationRepeat(this, currentLoopIndexInternal)
+                    it.onRepeat(this, currentLoopIndexInternal + 2)
+                    it.onAnimationRepeat(this, currentLoopIndexInternal + 1)
                 }
             }
         }
