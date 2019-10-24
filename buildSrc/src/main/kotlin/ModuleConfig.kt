@@ -1,5 +1,5 @@
 object ModuleConfig {
-    const val version = "1.9.0"
+    const val version = "1.9.1"
     const val groupId = "com.linecorp"
     const val artifactId = "apng"
     const val bintrayRepo = "apng-drawable"
