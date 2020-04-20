@@ -137,6 +137,22 @@ tasks.getByName("install", Upload::class).apply {
                     groupId = ModuleConfig.groupId
                     artifactId = ModuleConfig.artifactId
                     version = ModuleConfig.version
+                    withGroovyBuilder {
+                        "licenses" {
+                            // License for apng-drawable itself
+                            "license" {
+                                setProperty("name", "Apache-2.0")
+                                setProperty("url", "https://www.apache.org/licenses/LICENSE-2.0.txt")
+                                setProperty("distribution", "repo")
+                            }
+                            // License for libpng/apng-patch
+                            "license" {
+                                setProperty("name", "Zlib")
+                                setProperty("url", "http://www.zlib.net/zlib_license.html")
+                                setProperty("distribution", "repo")
+                            }
+                        }
+                    }
                 }
             }
         }
