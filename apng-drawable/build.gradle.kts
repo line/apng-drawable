@@ -1,12 +1,11 @@
 import org.gradle.api.internal.plugins.DslObject
-import org.jetbrains.dokka.gradle.DokkaAndroidTask
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     id("com.android.library")
     id("kotlin-android")
     id("org.jlleitschuh.gradle.ktlint") version Versions.ktlintGradleVersion
-    id("org.jetbrains.dokka-android") version Versions.dokkaVersion
+    id("org.jetbrains.dokka") version Versions.dokkaVersion
     id("com.github.dcendents.android-maven") version Versions.androidMavenGradlePluginVersion
     id("com.github.ben-manes.versions") version Versions.gradleVersionsPluginVersion
 }
@@ -80,16 +79,6 @@ ktlint {
         reporter(ReporterType.CHECKSTYLE)
     }
     ignoreFailures.set(true)
-}
-
-tasks.withType(DokkaAndroidTask::class.java) {
-    // https://github.com/Kotlin/dokka/issues/229
-    reportUndocumented = false
-    outputDirectory = "$buildDir/javadoc"
-    outputFormat = "javadoc"
-    includeNonPublic = true
-    includes = listOf("doc/module_package.md")
-    jdkVersion = 7
 }
 
 dependencies {
