@@ -8,7 +8,7 @@ object Versions {
     const val dokkaVersion = "0.9.17"
     const val bintrayGradlePluginVersion = "1.8.4"
     const val androidMavenGradlePluginVersion = "2.1"
-    const val gradleVersionsPluginVersion = "0.20.0"
+    const val gradleVersionsPluginVersion = "0.36.0"
 
     // Android
     const val minSdkVersion = 19
