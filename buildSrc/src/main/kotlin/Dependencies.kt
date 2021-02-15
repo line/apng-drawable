@@ -12,8 +12,8 @@ object Versions {
 
     // Android
     const val minSdkVersion = 19
-    const val compileSdkVersion = 28
-    const val targetSdkVersion = 28
+    const val compileSdkVersion = 30
+    const val targetSdkVersion = 30
 
     // Library
     const val androidxAppCompatVersion = "1.0.1"
