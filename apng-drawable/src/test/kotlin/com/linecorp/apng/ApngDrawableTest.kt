@@ -240,13 +240,13 @@ class ApngDrawableTest {
         }
 
         assertFailureMessage<IllegalArgumentException>(
-            "loopIndex must be lesser than loopCount. loopIndex = 3, loopCount = 2."
+            "loopIndex must be less than loopCount. loopIndex = 3, loopCount = 2."
         ) {
             target.seekToFrame(3, 0)
         }
 
         assertFailureMessage<IllegalArgumentException>(
-            "frameIndex must be lesser than frameCount. frameIndex = 11, frameCount = 10."
+            "frameIndex must be less than frameCount. frameIndex = 11, frameCount = 10."
         ) {
             target.seekToFrame(0, 11)
         }
