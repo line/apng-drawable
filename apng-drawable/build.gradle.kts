@@ -48,7 +48,7 @@ android {
                 cmake {
                     arguments += "-DCMAKE_BUILD_TYPE=DEBUG"
                     cppFlags += "-DBUILD_DEBUG"
-                    getcFlags() += "-DBUILD_DEBUG"
+                    cFlags += "-DBUILD_DEBUG"
                 }
             }
         }
@@ -63,21 +63,24 @@ android {
                 cmake {
                     arguments += "-DCMAKE_BUILD_TYPE=RELEASE"
                     cppFlags -= "-DBUILD_DEBUG"
-                    getcFlags() -= "-DBUILD_DEBUG"
+                    cFlags -= "-DBUILD_DEBUG"
                 }
             }
         }
     }
+    ndkVersion = Versions.ndkVersion
     externalNativeBuild {
         cmake {
-            setPath("src/main/cpp/CMakeLists.txt")
+            path = file("src/main/cpp/CMakeLists.txt")
         }
     }
 }
 
 ktlint {
     android.set(true)
-    reporters.set(setOf(ReporterType.CHECKSTYLE))
+    reporters {
+        reporter(ReporterType.CHECKSTYLE)
+    }
     ignoreFailures.set(true)
 }
 

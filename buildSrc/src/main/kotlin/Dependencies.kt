@@ -1,28 +1,29 @@
 object Versions {
     // Language
-    const val kotlinVersion = "1.3.50"
+    const val kotlinVersion = "1.4.30"
 
     // Plugin
-    const val androidPluginVersion = "3.5.0"
-    const val ktlintGradleVersion = "6.3.0"
+    const val androidPluginVersion = "4.1.2"
+    const val ktlintGradleVersion = "10.0.0"
     const val dokkaVersion = "0.9.17"
     const val bintrayGradlePluginVersion = "1.8.4"
     const val androidMavenGradlePluginVersion = "2.1"
-    const val gradleVersionsPluginVersion = "0.20.0"
+    const val gradleVersionsPluginVersion = "0.36.0"
 
     // Android
     const val minSdkVersion = 19
-    const val compileSdkVersion = 28
-    const val targetSdkVersion = 28
+    const val compileSdkVersion = 30
+    const val targetSdkVersion = 30
+    const val ndkVersion = "21.3.6528147"
 
     // Library
     const val androidxAppCompatVersion = "1.0.1"
     const val androidxAnnotationVersion = "1.1.0"
     const val androidxConstraintLayoutVersion = "1.1.3"
     const val androidxAnimatedVectorDrawable = "1.0.0"
-    const val junitVersion = "4.12"
-    const val robolectricVersion = "4.0.2"
-    const val mockitoVersion = "2.25.1"
+    const val junitVersion = "4.13.2"
+    const val robolectricVersion = "4.5.1"
+    const val mockitoVersion = "3.7.7"
     const val mockitoKotlinVersion = "2.1.0"
 }
 
