@@ -1,8 +1,7 @@
 package com.linecorp.apng.utils
 
-import org.hamcrest.Matchers.instanceOf
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertThat
+import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 
 /**
@@ -13,7 +12,7 @@ inline fun <reified T : Throwable> assertFailureMessage(failureMessage: String, 
         block()
         fail("An exception was expected but executed without exception.")
     } catch (throwable: Throwable) {
-        assertThat(throwable, instanceOf(T::class.java))
+        assertTrue(throwable is T)
         assertEquals(failureMessage, throwable.message)
     }
 }
