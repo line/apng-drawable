@@ -1,6 +1,6 @@
 object Versions {
     // Language
-    const val kotlinVersion = "1.3.50"
+    const val kotlinVersion = "1.4.30"
 
     // Plugin
     const val androidPluginVersion = "4.1.2"
