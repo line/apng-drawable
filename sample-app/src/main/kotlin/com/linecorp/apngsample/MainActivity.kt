@@ -25,23 +25,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import com.linecorp.apng.ApngDrawable
 import com.linecorp.apng.RepeatAnimationCallback
-import kotlinx.android.synthetic.main.activity_main.button_copy
-import kotlinx.android.synthetic.main.activity_main.button_gc
-import kotlinx.android.synthetic.main.activity_main.button_load_image_1
-import kotlinx.android.synthetic.main.activity_main.button_load_image_1_10x
-import kotlinx.android.synthetic.main.activity_main.button_load_image_1_5x
-import kotlinx.android.synthetic.main.activity_main.button_load_image_2_jpeg
-import kotlinx.android.synthetic.main.activity_main.button_load_image_2_normal_png
-import kotlinx.android.synthetic.main.activity_main.button_mutate
-import kotlinx.android.synthetic.main.activity_main.button_seek_end
-import kotlinx.android.synthetic.main.activity_main.button_seek_start
-import kotlinx.android.synthetic.main.activity_main.button_start
-import kotlinx.android.synthetic.main.activity_main.button_stop
-import kotlinx.android.synthetic.main.activity_main.imageView
-import kotlinx.android.synthetic.main.activity_main.text_callback
-import kotlinx.android.synthetic.main.activity_main.text_status
+import com.linecorp.apngsample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
 
     private var drawable: ApngDrawable? = null
 
@@ -49,40 +37,41 @@ class MainActivity : AppCompatActivity() {
     private val animationCallback = object : AnimationCallbacks() {
         override fun onAnimationStart(drawable: Drawable?) {
             Log.d("apng", "Animation start")
-            text_callback.text = "Animation started"
+            binding.textCallback.text = "Animation started"
         }
 
         override fun onAnimationRepeat(drawable: ApngDrawable, nextLoopIndex: Int) {
             val loopCount = drawable.loopCount
             Log.d("apng", "Animation repeat loopCount: $loopCount, nextLoopIndex: $nextLoopIndex")
-            text_callback.text = "Animation repeat " +
+            binding.textCallback.text = "Animation repeat " +
                     "loopCount: $loopCount, " +
                     "nextLoopIndex: $nextLoopIndex"
         }
 
         override fun onAnimationEnd(drawable: Drawable?) {
             Log.d("apng", "Animation end")
-            text_callback.text = "Animation ended"
+            binding.textCallback.text = "Animation ended"
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        button_load_image_1.setOnClickListener { startLoad("test.png") }
-        button_load_image_1_5x.setOnClickListener { startLoad("test.png", 500, 500) }
-        button_load_image_1_10x.setOnClickListener { startLoad("test.png", 1000, 1000) }
-        button_load_image_2_normal_png.setOnClickListener { startLoad("normal_png.png") }
-        button_load_image_2_jpeg.setOnClickListener { startLoad("jpeg.jpg") }
-        button_mutate.setOnClickListener { mutate() }
-        button_copy.setOnClickListener { duplicate() }
+        binding.buttonLoadImage1.setOnClickListener { startLoad("test.png") }
+        binding.buttonLoadImage15x.setOnClickListener { startLoad("test.png", 500, 500) }
+        binding.buttonLoadImage110x.setOnClickListener { startLoad("test.png", 1000, 1000) }
+        binding.buttonLoadImage2NormalPng.setOnClickListener { startLoad("normal_png.png") }
+        binding.buttonLoadImage2Jpeg.setOnClickListener { startLoad("jpeg.jpg") }
+        binding.buttonMutate.setOnClickListener { mutate() }
+        binding.buttonCopy.setOnClickListener { duplicate() }
 
-        button_start.setOnClickListener { startAnimation() }
-        button_stop.setOnClickListener { stopAnimation() }
-        button_gc.setOnClickListener { runGc() }
-        button_seek_start.setOnClickListener { seekTo(0L) }
-        button_seek_end.setOnClickListener { seekTo(10000000L) }
+        binding.buttonStart.setOnClickListener { startAnimation() }
+        binding.buttonStop.setOnClickListener { stopAnimation() }
+        binding.buttonGc.setOnClickListener { runGc() }
+        binding.buttonSeekStart.setOnClickListener { seekTo(0L) }
+        binding.buttonSeekEnd.setOnClickListener { seekTo(10000000L) }
     }
 
     @SuppressLint("SetTextI18n")
@@ -90,19 +79,19 @@ class MainActivity : AppCompatActivity() {
         //drawable?.recycle()
         drawable?.clearAnimationCallbacks()
         drawable = null
-        imageView.setImageDrawable(null)
+        binding.imageView.setImageDrawable(null)
         val isApng = assets.open(name).buffered().use {
             ApngDrawable.isApng(it)
         }
-        text_status.text = "isApng: $isApng"
+        binding.textStatus.text = "isApng: $isApng"
         if (isApng) {
             drawable = ApngDrawable.decode(assets, name, width, height)
             drawable?.loopCount = 5
             drawable?.setTargetDensity(resources.displayMetrics)
             drawable?.registerAnimationCallback(animationCallback)
             drawable?.registerRepeatAnimationCallback(animationCallback)
-            imageView.setImageDrawable(drawable)
-            imageView.scaleType = ImageView.ScaleType.CENTER
+            binding.imageView.setImageDrawable(drawable)
+            binding.imageView.scaleType = ImageView.ScaleType.CENTER
         }
         Log.d("apng", "size: ${drawable?.allocationByteCount} byte")
     }
@@ -118,8 +107,8 @@ class MainActivity : AppCompatActivity() {
         drawable?.registerRepeatAnimationCallback(animationCallback)
         drawable?.setTargetDensity(resources.displayMetrics)
 
-        (imageView.drawable as? ApngDrawable)?.recycle()
-        imageView.setImageDrawable(drawable)
+        (binding.imageView.drawable as? ApngDrawable)?.recycle()
+        binding.imageView.setImageDrawable(drawable)
     }
 
     private fun startAnimation() {
