@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.config.KotlinCompilerVersion
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("kotlin-android-extensions")
 }
 
 android {
@@ -30,6 +29,9 @@ android {
                 getDefaultProguardFile("proguard-android.txt"), file("proguard-rules.pro")
             )
         }
+    }
+    buildFeatures {
+        viewBinding = true
     }
 }
 
