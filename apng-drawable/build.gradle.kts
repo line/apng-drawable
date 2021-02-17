@@ -1,4 +1,3 @@
-import org.gradle.api.internal.plugins.DslObject
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
@@ -8,10 +7,11 @@ plugins {
     id("org.jetbrains.dokka") version Versions.dokkaVersion
     id("com.github.dcendents.android-maven") version Versions.androidMavenGradlePluginVersion
     id("com.github.ben-manes.versions") version Versions.gradleVersionsPluginVersion
+    `maven-publish`
 }
 
 group = ModuleConfig.groupId
-version = ModuleConfig.artifactId
+version = ModuleConfig.version
 
 android {
     defaultConfig {
@@ -97,28 +97,54 @@ val sourcesJarTask = tasks.create<Jar>("sourcesJar") {
     from(android.sourceSets["main"].java.srcDirs)
 }
 
-tasks.getByName("install", Upload::class).apply {
-    DslObject(repositories).convention
-        .getPlugin<MavenRepositoryHandlerConvention>()
-        .mavenInstaller {
-            pom {
-                project {
+val javadocJarTask = tasks.create<Jar>("javadocJar") {
+    archiveClassifier.set("javadoc")
+    from(tasks.getByName("dokkaJavadoc"))
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("apngDrawable") {
+                groupId = ModuleConfig.groupId
+                artifactId = ModuleConfig.artifactId
+                version = ModuleConfig.version
+                pom {
                     packaging = "aar"
-                    groupId = ModuleConfig.groupId
-                    artifactId = ModuleConfig.artifactId
-                    version = ModuleConfig.version
-                    withGroovyBuilder {
-                        "licenses" {
-                            "license" {
-                                setProperty("name", "Apache-2.0")
-                                setProperty("url", "https://www.apache.org/licenses/LICENSE-2.0.txt")
-                                setProperty("distribution", "repo")
-                            }
+                    name.set(ModuleConfig.name)
+                    description.set(ModuleConfig.description)
+                    url.set(ModuleConfig.siteUrl)
+                    licenses {
+                        license {
+                            name.set("The Apache License, Version 2.0")
+                            url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                            distribution.set("repo")
                         }
                     }
+                    developers {
+                        developer {
+                            name.set("LINE Corporation")
+                            email.set("dl_oss_dev@linecorp.com")
+                            url.set("https://engineering.linecorp.com/en/")
+                        }
+                    }
+                    scm {
+                        connection.set(ModuleConfig.scmConnectionUrl)
+                        developerConnection.set(ModuleConfig.scmDeveloperConnectionUrl)
+                        url.set(ModuleConfig.scmUrl)
+                    }
+                    issueManagement {
+                        system.set("GitHub")
+                        url.set(ModuleConfig.issueTrackerUrl)
+                    }
                 }
+
+                from(components["release"])
+                artifact(sourcesJarTask)
+                artifact(javadocJarTask)
             }
         }
+    }
 }
 
 artifacts {
