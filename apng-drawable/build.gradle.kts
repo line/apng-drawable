@@ -8,6 +8,7 @@ plugins {
     id("com.github.dcendents.android-maven") version Versions.androidMavenGradlePluginVersion
     id("com.github.ben-manes.versions") version Versions.gradleVersionsPluginVersion
     `maven-publish`
+    signing
 }
 
 group = ModuleConfig.groupId
@@ -144,6 +145,13 @@ afterEvaluate {
                 artifact(javadocJarTask)
             }
         }
+    }
+    signing {
+        val signingKey: String? by project
+        val signingPassword: String? by project
+
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign(publishing.publications["apngDrawable"])
     }
 }
 
