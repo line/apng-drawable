@@ -1,20 +1,18 @@
-import com.jfrog.bintray.gradle.BintrayExtension
-import org.gradle.api.internal.plugins.DslObject
-import org.jetbrains.dokka.gradle.DokkaAndroidTask
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     id("com.android.library")
     id("kotlin-android")
     id("org.jlleitschuh.gradle.ktlint") version Versions.ktlintGradleVersion
-    id("org.jetbrains.dokka-android") version Versions.dokkaVersion
-    id("com.jfrog.bintray") version Versions.bintrayGradlePluginVersion
+    id("org.jetbrains.dokka") version Versions.dokkaVersion
     id("com.github.dcendents.android-maven") version Versions.androidMavenGradlePluginVersion
     id("com.github.ben-manes.versions") version Versions.gradleVersionsPluginVersion
+    `maven-publish`
+    signing
 }
 
 group = ModuleConfig.groupId
-version = ModuleConfig.artifactId
+version = ModuleConfig.version
 
 android {
     defaultConfig {
@@ -84,16 +82,6 @@ ktlint {
     ignoreFailures.set(true)
 }
 
-tasks.withType(DokkaAndroidTask::class.java) {
-    // https://github.com/Kotlin/dokka/issues/229
-    reportUndocumented = false
-    outputDirectory = "$buildDir/javadoc"
-    outputFormat = "javadoc"
-    includeNonPublic = true
-    includes = listOf("doc/module_package.md")
-    jdkVersion = 7
-}
-
 dependencies {
     api(kotlin("stdlib-jdk7", Versions.kotlinVersion))
     api(Libs.androidxAnnotation)
@@ -105,61 +93,88 @@ dependencies {
     testImplementation(Libs.mockitoKotlin)
 }
 
-bintray {
-    user = project.properties["bintray.user"]?.toString() ?: ""
-    key = project.properties["bintray.api_key"]?.toString() ?: ""
-    setConfigurations("archives")
-
-    pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
-        repo = ModuleConfig.bintrayRepo
-        name = ModuleConfig.bintrayName
-        userOrg = ModuleConfig.bintrayUserOrg
-        setLicenses("Apache-2.0")
-        websiteUrl = ModuleConfig.siteUrl
-        issueTrackerUrl = ModuleConfig.issueTrackerUrl
-        vcsUrl = ModuleConfig.vcsUrl
-        publicDownloadNumbers = true
-        version = VersionConfig().apply {
-            name = ModuleConfig.version
-        }
-    })
-}
-
 val sourcesJarTask = tasks.create<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
     from(android.sourceSets["main"].java.srcDirs)
 }
 
-tasks.getByName("install", Upload::class).apply {
-    DslObject(repositories).convention
-        .getPlugin<MavenRepositoryHandlerConvention>()
-        .mavenInstaller {
-            pom {
-                project {
+val javadocJarTask = tasks.create<Jar>("javadocJar") {
+    archiveClassifier.set("javadoc")
+    from(tasks.getByName("dokkaJavadoc"))
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("apngDrawable") {
+                groupId = ModuleConfig.groupId
+                artifactId = ModuleConfig.artifactId
+                version = ModuleConfig.version
+                pom {
                     packaging = "aar"
-                    groupId = ModuleConfig.groupId
-                    artifactId = ModuleConfig.artifactId
-                    version = ModuleConfig.version
-                    withGroovyBuilder {
-                        "licenses" {
-                            // License for apng-drawable itself
-                            "license" {
-                                setProperty("name", "Apache-2.0")
-                                setProperty("url", "https://www.apache.org/licenses/LICENSE-2.0.txt")
-                                setProperty("distribution", "repo")
-                            }
-                            // License for libpng/apng-patch
-                            "license" {
-                                setProperty("name", "Zlib")
-                                setProperty("url", "http://www.zlib.net/zlib_license.html")
-                                setProperty("distribution", "repo")
-                            }
+                    name.set(ModuleConfig.name)
+                    description.set(ModuleConfig.description)
+                    url.set(ModuleConfig.siteUrl)
+                    licenses {
+                        license {
+                            name.set("The Apache License, Version 2.0")
+                            url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                            distribution.set("repo")
                         }
                     }
+                    developers {
+                        developer {
+                            name.set("LINE Corporation")
+                            email.set("dl_oss_dev@linecorp.com")
+                            url.set("https://engineering.linecorp.com/en/")
+                        }
+                    }
+                    scm {
+                        connection.set(ModuleConfig.scmConnectionUrl)
+                        developerConnection.set(ModuleConfig.scmDeveloperConnectionUrl)
+                        url.set(ModuleConfig.scmUrl)
+                    }
+                    issueManagement {
+                        system.set("GitHub")
+                        url.set(ModuleConfig.issueTrackerUrl)
+                    }
+                }
+
+                from(components["release"])
+                artifact(sourcesJarTask)
+                artifact(javadocJarTask)
+            }
+        }
+        repositories {
+            maven {
+                name = "MavenCentral"
+                val releaseRepositoryUrl =
+                    "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                val snapshotRepositoryUrl =
+                    "https://oss.sonatype.org/content/repositories/snapshots/"
+                val repositoryUrl = if (ModuleConfig.version.endsWith("SNAPSHOT")) {
+                    snapshotRepositoryUrl
+                } else {
+                    releaseRepositoryUrl
+                }
+                val repositoryUsername: String? by project
+                val repositoryPassword: String? by project
+
+                url = uri(repositoryUrl)
+                credentials {
+                    username = repositoryUsername ?: ""
+                    password = repositoryPassword ?: ""
                 }
             }
         }
-    tasks["bintrayUpload"].dependsOn(this)
+    }
+    signing {
+        val signingKey: String? by project
+        val signingPassword: String? by project
+
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign(publishing.publications["apngDrawable"])
+    }
 }
 
 artifacts {

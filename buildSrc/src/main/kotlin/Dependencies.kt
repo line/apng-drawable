@@ -5,8 +5,7 @@ object Versions {
     // Plugin
     const val androidPluginVersion = "4.1.2"
     const val ktlintGradleVersion = "10.0.0"
-    const val dokkaVersion = "0.9.17"
-    const val bintrayGradlePluginVersion = "1.8.4"
+    const val dokkaVersion = "1.4.20"
     const val androidMavenGradlePluginVersion = "2.1"
     const val gradleVersionsPluginVersion = "0.36.0"
 
