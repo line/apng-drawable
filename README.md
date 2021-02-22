@@ -1,20 +1,20 @@
 # ApngDrawable
 
-[![Download](https://api.bintray.com/packages/line/apng-drawable/com.linecorp.apng/images/download.svg)](https://bintray.com/line/apng-drawable/com.linecorp.apng/_latestVersion)
+[![Maven Central](https://img.shields.io/maven-central/v/com.linecorp/apng)](https://search.maven.org/artifact/com.linecorp/apng)
 
 ApngDrawable is fast and light weight Animated Portable Network Graphics(APNG) image decoder library for Android platform.
 ApngDrawable is written in Kotlin and C++.
 
 ## How to use
 
-Use Gradle to build the library. Download it from [JCenter](https://bintray.com/bintray/jcenter) and add configurations in the `build.gradle` file as follows.
+Use Gradle to build the library. Download it from [Maven Central](https://search.maven.org/artifact/com.linecorp/apng) and add configurations in the `build.gradle` file as follows.
 
 ```build.gradle
 // In your top-level project's `build.gradle`
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 
@@ -30,7 +30,7 @@ If using Kotlin Gradle DSL, add configurations in the `build.gradle.kts` file as
 // In your top-level project's `build.gradle.kts`
 allprojects {
     repositories {
-        jcenter()
+        mavenCentral()
     }
 }
 
