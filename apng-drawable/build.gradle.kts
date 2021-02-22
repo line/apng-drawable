@@ -145,6 +145,28 @@ afterEvaluate {
                 artifact(javadocJarTask)
             }
         }
+        repositories {
+            maven {
+                name = "MavenCentral"
+                val releaseRepositoryUrl =
+                    "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                val snapshotRepositoryUrl =
+                    "https://oss.sonatype.org/content/repositories/snapshots/"
+                val repositoryUrl = if (ModuleConfig.version.endsWith("SNAPSHOT")) {
+                    snapshotRepositoryUrl
+                } else {
+                    releaseRepositoryUrl
+                }
+                val repositoryUsername: String? by project
+                val repositoryPassword: String? by project
+
+                url = uri(repositoryUrl)
+                credentials {
+                    username = repositoryUsername ?: ""
+                    password = repositoryPassword ?: ""
+                }
+            }
+        }
     }
     signing {
         val signingKey: String? by project
