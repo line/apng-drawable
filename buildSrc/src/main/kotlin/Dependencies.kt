@@ -8,6 +8,7 @@ object Versions {
     const val dokkaVersion = "1.4.20"
     const val androidMavenGradlePluginVersion = "2.1"
     const val gradleVersionsPluginVersion = "0.36.0"
+    const val nexusStagingVersion = "0.22.0"
 
     // Android
     const val minSdkVersion = 19
