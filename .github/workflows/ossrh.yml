@@ -23,7 +23,9 @@ jobs:
           ORG_GRADLE_PROJECT_repositoryPassword: ${{ secrets.OSSRH_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
-        run: ./gradlew publish
+        run: |
+          cat libpng_version | xargs ./download_libpng_and_apply_apng_patch.sh
+          ./gradlew publish
       - name: Release to Maven Central
         if: ${{ github.event.inputs.cond_release == 'release' }}
         env:
