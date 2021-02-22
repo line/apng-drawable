@@ -11,6 +11,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: deploy
     steps:
       - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1
