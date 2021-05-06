@@ -39,6 +39,8 @@ dependencies {
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
     implementation(Libs.androidxAppcompat)
     implementation(Libs.androidxConstraintLayout)
+    implementation(Libs.kotlinxCoroutines)
+    implementation(Libs.lichLifecycle)
 
     implementation(project(":apng-drawable"))
 }

@@ -21,6 +21,8 @@ object Versions {
     const val androidxAnnotationVersion = "1.1.0"
     const val androidxConstraintLayoutVersion = "1.1.3"
     const val androidxAnimatedVectorDrawable = "1.0.0"
+    const val kotlinxCoroutinesVersion = "1.4.3"
+    const val lichLifecycleVersion = "1.3.0"
     const val junitVersion = "4.13.2"
     const val robolectricVersion = "4.5.1"
     const val mockitoVersion = "3.7.7"
@@ -37,6 +39,9 @@ object Libs {
         "androidx.vectordrawable:vectordrawable-animated:${Versions.androidxAnimatedVectorDrawable}"
     const val androidxConstraintLayout =
         "androidx.constraintlayout:constraintlayout:${Versions.androidxConstraintLayoutVersion}"
+    const val kotlinxCoroutines =
+        "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlinxCoroutinesVersion}"
+    const val lichLifecycle = "com.linecorp.lich:lifecycle:${Versions.lichLifecycleVersion}"
     const val junit = "junit:junit:${Versions.junitVersion}"
     const val robolectric = "org.robolectric:robolectric:${Versions.robolectricVersion}"
     const val mockitoInline = "org.mockito:mockito-inline:${Versions.mockitoVersion}"
