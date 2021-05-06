@@ -220,12 +220,27 @@ std::unique_ptr<ApngImage> ApngDecoder::decode(
     rows_buffer[j] = p_buffer.get() + j * row_bytes;
   }
 
-  std::unique_ptr<ApngImage> png(new ApngImage(
-      width,
-      height,
-      static_cast<uint32_t>(frames),
-      static_cast<uint32_t>(plays)
-  ));
+  std::unique_ptr<ApngImage> png;
+  try {
+    png = std::make_unique<ApngImage>(
+        width,
+        height,
+        static_cast<uint32_t>(frames),
+        static_cast<uint32_t>(plays)
+    );
+  } catch (const std::bad_alloc &) {
+    LOGV(" | failed to allocate ApngImage due to std::bad_alloc");
+    png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+    result = ERR_OUT_OF_MEMORY;
+    return nullptr;
+  }
+
+  if (!png) {
+    LOGV(" | failed to allocate ApngImage");
+    png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+    result = ERR_OUT_OF_MEMORY;
+    return nullptr;
+  }
 
   // Point to handle error (everything until done decoding)
   if (setjmp(png_jmpbuf(png_ptr)) != 0) { // NOLINT(cert-err52-cpp)
