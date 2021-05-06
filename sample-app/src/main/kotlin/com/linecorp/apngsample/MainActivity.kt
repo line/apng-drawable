@@ -17,19 +17,33 @@
 package com.linecorp.apngsample
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.drawable.Drawable
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import com.linecorp.apng.ApngDrawable
 import com.linecorp.apng.RepeatAnimationCallback
 import com.linecorp.apngsample.databinding.ActivityMainBinding
+import com.linecorp.lich.lifecycle.AutoResetLifecycleScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private val lifecycleScope: CoroutineScope = AutoResetLifecycleScope(this)
 
     private var drawable: ApngDrawable? = null
 
@@ -72,6 +86,7 @@ class MainActivity : AppCompatActivity() {
         binding.buttonGc.setOnClickListener { runGc() }
         binding.buttonSeekStart.setOnClickListener { seekTo(0L) }
         binding.buttonSeekEnd.setOnClickListener { seekTo(10000000L) }
+        binding.buttonSaveCurrentFrame.setOnClickListener { exportCurrentFrame() }
     }
 
     @SuppressLint("SetTextI18n")
@@ -125,6 +140,53 @@ class MainActivity : AppCompatActivity() {
 
     private fun seekTo(time: Long) {
         drawable?.seekTo(time)
+    }
+
+    private fun exportCurrentFrame() {
+        val drawableSnapshot = drawable ?: return
+        lifecycleScope.launch {
+            val bitmap = exportAsBitmap(drawableSnapshot)
+            val savedUri = saveAsPng(bitmap)
+            val toastMessage = if (savedUri != null) {
+                "Saved to $savedUri"
+            } else {
+                "Failed to save image"
+            }
+            Toast.makeText(this@MainActivity, toastMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private suspend fun exportAsBitmap(drawable: Drawable): Bitmap =
+        withContext(Dispatchers.Default) {
+            val bitmap = Bitmap.createBitmap(
+                drawable.intrinsicWidth,
+                drawable.intrinsicHeight,
+                Bitmap.Config.ARGB_8888
+            )
+            val canvas = Canvas(bitmap)
+            drawable.draw(canvas)
+            return@withContext bitmap
+        }
+
+    private suspend fun saveAsPng(bitmap: Bitmap): Uri? = withContext(Dispatchers.IO) {
+        val resolver = applicationContext.contentResolver
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        val collectionUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        } else {
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        }
+        val contentValues = ContentValues().apply {
+            put(
+                MediaStore.Audio.Media.DISPLAY_NAME,
+                "apng-frame-export-${System.currentTimeMillis()}.png"
+            )
+        }
+        val uri = resolver.insert(collectionUri, contentValues) ?: return@withContext null
+        resolver.openOutputStream(uri)?.use {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+        }
+        return@withContext uri
     }
 
     private abstract class AnimationCallbacks

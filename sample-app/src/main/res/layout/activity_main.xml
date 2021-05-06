@@ -151,6 +151,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/run_gc" />
 
+            <Button
+                android:id="@+id/button_save_current_frame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save_current_frame" />
+
         </LinearLayout>
 
     </HorizontalScrollView>

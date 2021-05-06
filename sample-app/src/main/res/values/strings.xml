@@ -16,6 +16,7 @@
     <string name="not_apng">Not APNG</string>
     <string name="jpeg">JPEG</string>
     <string name="run_gc">Run GC</string>
+    <string name="save_current_frame">Save current frame</string>
     <string name="seek_to_first">Seek to first</string>
     <string name="seek_to_end">Seek to End</string>
 </resources>
