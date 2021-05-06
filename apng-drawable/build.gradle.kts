@@ -29,7 +29,7 @@ android {
             cmake {
                 cppFlags += "-std=c++17"
                 cppFlags += "-fno-rtti"
-                cppFlags += "-fno-exceptions"
+                cppFlags += "-fexceptions"
             }
         }
     }
