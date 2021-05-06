@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,156 +10,179 @@
         android:id="@+id/text_img_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/image_1" />
+        android:text="@string/image_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/layout_img_1"
-        android:layout_width="match_parent"
+    <HorizontalScrollView
+        android:id="@+id/scroll_load_apng_image"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text_img_1"
-        android:layout_alignParentStart="true"
-        android:orientation="horizontal">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_img_1">
 
-        <Button
-            android:id="@+id/button_load_image_1"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/load" />
+            android:layout_margin="4dp"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button_load_image_1_5x"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/load_5x" />
+            <Button
+                android:id="@+id/button_load_image_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/load" />
 
-        <Button
-            android:id="@+id/button_load_image_1_10x"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/load_10x" />
+            <Button
+                android:id="@+id/button_load_image_1_5x"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/load_5x" />
 
-        <Button
-            android:id="@+id/button_mutate"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/mutate" />
+            <Button
+                android:id="@+id/button_load_image_1_10x"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/load_10x" />
 
-        <Button
-            android:id="@+id/button_copy"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/copy" />
-    </LinearLayout>
+            <Button
+                android:id="@+id/button_mutate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mutate" />
+
+            <Button
+                android:id="@+id/button_copy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/copy" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
 
     <TextView
         android:id="@+id/text_img_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_img_1"
-        android:layout_alignParentStart="true"
-        android:text="@string/not_apng" />
+        android:text="@string/not_apng"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scroll_load_apng_image" />
 
-    <LinearLayout
-        android:id="@+id/layout_img_2"
-        android:layout_width="match_parent"
+    <HorizontalScrollView
+        android:id="@+id/scroll_load_non_apng_image"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text_img_2"
-        android:layout_alignParentStart="true"
-        android:orientation="horizontal">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_img_2">
 
-        <Button
-            android:id="@+id/button_load_image_2_normal_png"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/normal_png" />
+            android:layout_margin="4dp"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button_load_image_2_jpeg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/jpeg" />
+            <Button
+                android:id="@+id/button_load_image_2_normal_png"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/normal_png" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/button_load_image_2_jpeg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/jpeg" />
+        </LinearLayout>
+
+    </HorizontalScrollView>
 
     <TextView
         android:id="@+id/text_commands"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_img_2"
-        android:layout_alignParentStart="true"
-        android:text="@string/commands" />
+        android:text="@string/commands"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scroll_load_non_apng_image" />
 
-    <LinearLayout
-        android:id="@+id/layout_commands"
-        android:layout_width="match_parent"
+    <HorizontalScrollView
+        android:id="@+id/scroll_commands"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text_commands"
-        android:layout_alignParentStart="true"
-        android:orientation="horizontal">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_commands">
 
-        <Button
-            android:id="@+id/button_start"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/start" />
+            android:layout_margin="4dp"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button_stop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/stop" />
+            <Button
+                android:id="@+id/button_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start" />
 
-        <Button
-            android:id="@+id/button_seek_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/seek_to_first" />
+            <Button
+                android:id="@+id/button_stop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stop" />
 
-        <Button
-            android:id="@+id/button_seek_end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/seek_to_end" />
+            <Button
+                android:id="@+id/button_seek_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/seek_to_first" />
 
-        <Button
-            android:id="@+id/button_gc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/run_gc" />
-    </LinearLayout>
+            <Button
+                android:id="@+id/button_seek_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/seek_to_end" />
 
-    <LinearLayout
-        android:id="@+id/panel_status"
-        android:layout_width="match_parent"
+            <Button
+                android:id="@+id/button_gc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/run_gc" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+
+    <TextView
+        android:id="@+id/text_status"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_commands"
-        android:layout_alignParentStart="true"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/text_status"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content" />
+        app:layout_constraintEnd_toStartOf="@id/text_callback"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scroll_commands"
+        tools:text="@tools:sample/lorem" />
 
-        <TextView
-            android:id="@+id/text_callback"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/text_callback"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/text_status"
+        app:layout_constraintTop_toTopOf="@id/text_status"
+        tools:text="@tools:sample/lorem" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/panel_status"
-        android:layout_alignParentStart="true" />
+        android:layout_height="0dp"
+        android:layout_alignParentStart="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_status"
+        tools:ignore="ContentDescription" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
