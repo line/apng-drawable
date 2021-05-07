@@ -32,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import com.linecorp.apng.ApngDrawable
 import com.linecorp.apng.RepeatAnimationCallback
+import com.linecorp.apng.decoder.ApngException
 import com.linecorp.apngsample.databinding.ActivityMainBinding
 import com.linecorp.lich.lifecycle.AutoResetLifecycleScope
 import kotlinx.coroutines.CoroutineScope
@@ -95,12 +96,18 @@ class MainActivity : AppCompatActivity() {
         drawable?.clearAnimationCallbacks()
         drawable = null
         binding.imageView.setImageDrawable(null)
+        binding.textCallback.text = null
         val isApng = assets.open(name).buffered().use {
             ApngDrawable.isApng(it)
         }
         binding.textStatus.text = "isApng: $isApng"
         if (isApng) {
-            drawable = ApngDrawable.decode(assets, name, width, height)
+            try {
+                drawable = ApngDrawable.decode(assets, name, width, height)
+            } catch (e: ApngException) {
+                binding.textCallback.text = "Failed to decode: ${e.errorCode}"
+                return
+            }
             drawable?.loopCount = 5
             drawable?.setTargetDensity(resources.displayMetrics)
             drawable?.registerAnimationCallback(animationCallback)

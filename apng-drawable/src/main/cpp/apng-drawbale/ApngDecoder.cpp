@@ -181,6 +181,7 @@ std::unique_ptr<ApngImage> ApngDecoder::decode(
   png_uint_32 frames = 1;
   png_uint_32 plays = 0;
   bool has_acTL = png_get_acTL(png_ptr, info_ptr, &frames, &plays) != 0;
+  LOGV(" | acTL result=%d, frames=%d, plays=%d", has_acTL, frames, plays);
   if (!has_acTL) {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
     result = ERR_INVALID_FILE_FORMAT;
@@ -209,6 +210,7 @@ std::unique_ptr<ApngImage> ApngDecoder::decode(
   std::unique_ptr<png_bytep[]> rows_frame(new png_bytep[row_ptr_array_size]);
   std::unique_ptr<png_bytep[]> rows_buffer(new png_bytep[row_ptr_array_size]);
   if (!p_frame || !p_buffer || !p_previous_frame || !rows_frame || !rows_buffer) {
+    LOGV(" | failed to allocate buffers");
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
     result = ERR_OUT_OF_MEMORY;
     return nullptr;
@@ -220,12 +222,27 @@ std::unique_ptr<ApngImage> ApngDecoder::decode(
     rows_buffer[j] = p_buffer.get() + j * row_bytes;
   }
 
-  std::unique_ptr<ApngImage> png(new ApngImage(
-      width,
-      height,
-      static_cast<uint32_t>(frames),
-      static_cast<uint32_t>(plays)
-  ));
+  std::unique_ptr<ApngImage> png;
+  try {
+    png = std::make_unique<ApngImage>(
+        width,
+        height,
+        static_cast<uint32_t>(frames),
+        static_cast<uint32_t>(plays)
+    );
+  } catch (const std::bad_alloc &) {
+    LOGV(" | failed to allocate ApngImage due to std::bad_alloc");
+    png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+    result = ERR_OUT_OF_MEMORY;
+    return nullptr;
+  }
+
+  if (!png) {
+    LOGV(" | failed to allocate ApngImage");
+    png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+    result = ERR_OUT_OF_MEMORY;
+    return nullptr;
+  }
 
   // Point to handle error (everything until done decoding)
   if (setjmp(png_jmpbuf(png_ptr)) != 0) { // NOLINT(cert-err52-cpp)
