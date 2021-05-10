@@ -20,17 +20,10 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - uses: actions/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.0'
-      - name: Restore Gem cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            vendor/bundle
-          key: ${{ runner.os }}-gem-${{ hashFiles('Gemfile') }}
-          restore-keys: |
-            ${{ runner.os }}-gem-
+          bundler-cache: true
       - name: Run lint and unit test
         run: ./gradlew --continue :apng-drawable:testDebugUnitTest :apng-drawable:lintDebug :apng-drawable:ktlintMainSourceSetCheck
       - name: Run Danger
@@ -38,6 +31,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JOB_STATUS: ${{ job.status }}
-        run: |
-          bundle install
-          bundle exec danger --remove-previous-comments --fail-on-errors=true
+        run: bundle exec danger --remove-previous-comments --fail-on-errors=true
