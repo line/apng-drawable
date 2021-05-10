@@ -1,0 +1,43 @@
+name: Run tests on a pull request
+
+on: pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Restore Gradle cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+      - name: Restore Gem cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            vendor/bundle
+          key: ${{ runner.os }}-gem-${{ hashFiles('Gemfile') }}
+          restore-keys: |
+            ${{ runner.os }}-gem-
+      - name: Run lint and unit test
+        run: ./gradlew --continue :apng-drawable:testDebugUnitTest :apng-drawable:lintDebug :apng-drawable:ktlintMainSourceSetCheck
+      - name: Run Danger
+          if: cancelled() != true
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            JOB_STATUS: ${{ job.status }}
+          run: |
+            bundle install
+            bundle exec danger --remove-previous-comments --fail-on-errors=true

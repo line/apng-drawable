@@ -72,6 +72,9 @@ android {
             path = file("src/main/cpp/CMakeLists.txt")
         }
     }
+    lintOptions {
+        xmlReport = true
+    }
 }
 
 ktlint {
@@ -79,7 +82,6 @@ ktlint {
     reporters {
         reporter(ReporterType.CHECKSTYLE)
     }
-    ignoreFailures.set(true)
 }
 
 dependencies {
