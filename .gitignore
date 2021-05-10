@@ -244,3 +244,5 @@ $RECYCLE.BIN/
 
 /tmp
 .cxx/
+/Gemfile.lock
+/vendor/bundle
