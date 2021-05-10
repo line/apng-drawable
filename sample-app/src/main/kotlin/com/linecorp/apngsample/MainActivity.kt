@@ -59,8 +59,8 @@ class MainActivity : AppCompatActivity() {
             val loopCount = drawable.loopCount
             Log.d("apng", "Animation repeat loopCount: $loopCount, nextLoopIndex: $nextLoopIndex")
             binding.textCallback.text = "Animation repeat " +
-                    "loopCount: $loopCount, " +
-                    "nextLoopIndex: $nextLoopIndex"
+                "loopCount: $loopCount, " +
+                "nextLoopIndex: $nextLoopIndex"
         }
 
         override fun onAnimationEnd(drawable: Drawable?) {
