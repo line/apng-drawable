@@ -34,7 +34,7 @@ jobs:
       - name: Run lint and unit test
         run: ./gradlew --continue :apng-drawable:testDebugUnitTest :apng-drawable:lintDebug :apng-drawable:ktlintMainSourceSetCheck
       - name: Run Danger
-          if: cancelled() != true
+          if: ${{ cancelled() }}
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             JOB_STATUS: ${{ job.status }}
