@@ -29,7 +29,6 @@ import android.view.animation.AnimationUtils
 import androidx.annotation.DrawableRes
 import androidx.annotation.IntRange
 import androidx.annotation.RawRes
-import androidx.annotation.RequiresApi
 import androidx.annotation.VisibleForTesting
 import androidx.annotation.WorkerThread
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
@@ -369,7 +368,6 @@ class ApngDrawable @VisibleForTesting internal constructor(
         return currentLoopIndexInternal > loopCount - 1
     }
 
-    @RequiresApi(30)
     private fun computeBitmapSize() {
         scaledWidth = scaleFromDensity(apngState.width, apngState.sourceDensity, targetDensity)
         scaledHeight = scaleFromDensity(apngState.height, apngState.sourceDensity, targetDensity)
