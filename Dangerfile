@@ -22,6 +22,4 @@ android_lint.lint(inline_mode: true)
 
 return unless status_report[:errors].empty?
 
-return markdown "Check Failed" if ENV["JOB_STATUS"] != "success"
-
-return markdown "Passed"
+return markdown "Build Failed" if ENV["JOB_STATUS"] != "success"
