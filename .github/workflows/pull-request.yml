@@ -34,10 +34,10 @@ jobs:
       - name: Run lint and unit test
         run: ./gradlew --continue :apng-drawable:testDebugUnitTest :apng-drawable:lintDebug :apng-drawable:ktlintMainSourceSetCheck
       - name: Run Danger
-          if: ${{ cancelled() }}
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            JOB_STATUS: ${{ job.status }}
-          run: |
-            bundle install
-            bundle exec danger --remove-previous-comments --fail-on-errors=true
+        if: ${{ cancelled() != true }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          bundle install
+          bundle exec danger --remove-previous-comments --fail-on-errors=true
