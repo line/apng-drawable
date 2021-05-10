@@ -42,6 +42,7 @@ class ApngDrawableTest {
 
     @Mock
     private lateinit var nBitmapAnimation: Apng
+
     @Mock
     private lateinit var canvas: Canvas
     private lateinit var currentTimeProvider: CurrentTimeProvider

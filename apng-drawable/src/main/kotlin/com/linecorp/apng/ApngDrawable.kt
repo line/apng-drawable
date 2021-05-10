@@ -29,6 +29,7 @@ import android.view.animation.AnimationUtils
 import androidx.annotation.DrawableRes
 import androidx.annotation.IntRange
 import androidx.annotation.RawRes
+import androidx.annotation.RequiresApi
 import androidx.annotation.VisibleForTesting
 import androidx.annotation.WorkerThread
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
@@ -291,11 +292,11 @@ class ApngDrawable @VisibleForTesting internal constructor(
         require(frameIndex >= 0) { "frameIndex must be positive value" }
         require(loopIndex < loopCount) {
             "loopIndex must be less than loopCount." +
-                    " loopIndex = $loopIndex, loopCount = $loopCount."
+                " loopIndex = $loopIndex, loopCount = $loopCount."
         }
         require(frameIndex < frameCount) {
             "frameIndex must be less than frameCount." +
-                    " frameIndex = $frameIndex, frameCount = $frameCount."
+                " frameIndex = $frameIndex, frameCount = $frameCount."
         }
         seekTo(loopIndex * durationMillis.toLong() + frameStartTimes[frameIndex])
     }
@@ -368,6 +369,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
         return currentLoopIndexInternal > loopCount - 1
     }
 
+    @RequiresApi(30)
     private fun computeBitmapSize() {
         scaledWidth = scaleFromDensity(apngState.width, apngState.sourceDensity, targetDensity)
         scaledHeight = scaleFromDensity(apngState.height, apngState.sourceDensity, targetDensity)
@@ -383,7 +385,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
         return when {
             // Continue searching in the upper half
             frameStartTimes.size > middleIndex + 1 &&
-                    progressMillisInCurrentLoop >= frameStartTimes[middleIndex + 1] ->
+                progressMillisInCurrentLoop >= frameStartTimes[middleIndex + 1] ->
                 calculateCurrentFrameIndex(
                     middleIndex + 1,
                     upperBoundIndex,
@@ -392,7 +394,7 @@ class ApngDrawable @VisibleForTesting internal constructor(
 
             // Continue searching in the lower half
             lowerBoundIndex != upperBoundIndex &&
-                    progressMillisInCurrentLoop < frameStartTimes[middleIndex] ->
+                progressMillisInCurrentLoop < frameStartTimes[middleIndex] ->
                 calculateCurrentFrameIndex(
                     lowerBoundIndex,
                     middleIndex,
