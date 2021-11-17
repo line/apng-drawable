@@ -3,10 +3,9 @@ object Versions {
     const val kotlinVersion = "1.4.30"
 
     // Plugin
-    const val androidPluginVersion = "4.2.0"
+    const val androidPluginVersion = "7.0.1"
     const val ktlintGradleVersion = "10.0.0"
     const val dokkaVersion = "1.4.20"
-    const val androidMavenGradlePluginVersion = "2.1"
     const val gradleVersionsPluginVersion = "0.36.0"
     const val nexusStagingVersion = "0.22.0"
 
