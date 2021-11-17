@@ -14,7 +14,7 @@ object Versions {
     const val minSdkVersion = 19
     const val compileSdkVersion = 30
     const val targetSdkVersion = 30
-    const val ndkVersion = "21.3.6528147"
+    const val ndkVersion = "21.4.7075529"
 
     // Library
     const val androidxAppCompatVersion = "1.0.1"
