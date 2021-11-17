@@ -20,7 +20,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
-import android.os.Build
 import android.os.Trace
 import android.util.Log
 import androidx.annotation.IntRange
@@ -63,11 +62,7 @@ internal class Apng(
     private val bitmap: Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
 
     val byteCount: Int
-        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            bitmap.allocationByteCount
-        } else {
-            bitmap.rowBytes * height
-        }
+        get() = bitmap.allocationByteCount
 
     init {
         Trace.beginSection("Apng#draw")
