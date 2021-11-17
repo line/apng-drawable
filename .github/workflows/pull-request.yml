@@ -27,7 +27,9 @@ jobs:
           ruby-version: '3.0'
           bundler-cache: true
       - name: Run lint and unit test
-        run: ./gradlew --continue :apng-drawable:testDebugUnitTest :apng-drawable:lintDebug :apng-drawable:ktlintMainSourceSetCheck
+        run: |
+          cat libpng_version | xargs ./download_libpng_and_apply_apng_patch.sh
+          ./gradlew --continue :apng-drawable:testDebugUnitTest :apng-drawable:lintDebug :apng-drawable:ktlintMainSourceSetCheck
       - name: Run Danger
         if: ${{ cancelled() != true }}
         env:

@@ -54,31 +54,31 @@ target_link_libraries(png
 # apng-drawable
 #
 
-set(apng_drawbale_source_dir
-        ${CMAKE_CURRENT_SOURCE_DIR}/apng-drawbale
+set(apng_drawable_source_dir
+        ${CMAKE_CURRENT_SOURCE_DIR}/apng-drawable
         )
 
-set(apng_drawbale_headers
-        ${apng_drawbale_source_dir}/ApngDecoder.h
-        ${apng_drawbale_source_dir}/ApngFrame.h
-        ${apng_drawbale_source_dir}/ApngImage.h
-        ${apng_drawbale_source_dir}/Error.h
-        ${apng_drawbale_source_dir}/Log.h
-        ${apng_drawbale_source_dir}/StreamSource.h
+set(apng_drawable_headers
+        ${apng_drawable_source_dir}/ApngDecoder.h
+        ${apng_drawable_source_dir}/ApngFrame.h
+        ${apng_drawable_source_dir}/ApngImage.h
+        ${apng_drawable_source_dir}/Error.h
+        ${apng_drawable_source_dir}/Log.h
+        ${apng_drawable_source_dir}/StreamSource.h
         )
 
-set(apng_drawbale_sources
-        ${apng_drawbale_source_dir}/ApngDecoder.cpp
-        ${apng_drawbale_source_dir}/ApngDecoderJni.cpp
-        ${apng_drawbale_source_dir}/ApngFrame.cpp
-        ${apng_drawbale_source_dir}/ApngImage.cpp
-        ${apng_drawbale_source_dir}/StreamSource.cpp
+set(apng_drawable_sources
+        ${apng_drawable_source_dir}/ApngDecoder.cpp
+        ${apng_drawable_source_dir}/ApngDecoderJni.cpp
+        ${apng_drawable_source_dir}/ApngFrame.cpp
+        ${apng_drawable_source_dir}/ApngImage.cpp
+        ${apng_drawable_source_dir}/StreamSource.cpp
         )
 
 add_library(apng-drawable
         SHARED
-        ${apng_drawbale_headers}
-        ${apng_drawbale_sources}
+        ${apng_drawable_headers}
+        ${apng_drawable_sources}
         )
 
 target_include_directories(

@@ -5,7 +5,6 @@ plugins {
     id("kotlin-android")
     id("org.jlleitschuh.gradle.ktlint") version Versions.ktlintGradleVersion
     id("org.jetbrains.dokka") version Versions.dokkaVersion
-    id("com.github.dcendents.android-maven") version Versions.androidMavenGradlePluginVersion
     id("com.github.ben-manes.versions") version Versions.gradleVersionsPluginVersion
     `maven-publish`
     signing
@@ -16,10 +15,9 @@ version = ModuleConfig.version
 
 android {
     defaultConfig {
-        minSdkVersion(Versions.minSdkVersion)
-        compileSdkVersion(Versions.compileSdkVersion)
-        targetSdkVersion(Versions.targetSdkVersion)
-        versionName = ModuleConfig.version
+        minSdk = Versions.minSdkVersion
+        compileSdk = Versions.compileSdkVersion
+        targetSdk = Versions.targetSdkVersion
         version = ModuleConfig.version
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles(
@@ -41,7 +39,6 @@ android {
     buildTypes {
         debug {
             isMinifyEnabled = false
-            isUseProguard = false
             externalNativeBuild {
                 cmake {
                     arguments += "-DCMAKE_BUILD_TYPE=DEBUG"
@@ -52,7 +49,6 @@ android {
         }
         release {
             isMinifyEnabled = false
-            isUseProguard = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android.txt"),
                 file("proguard-rules.pro")
@@ -72,7 +68,7 @@ android {
             path = file("src/main/cpp/CMakeLists.txt")
         }
     }
-    lintOptions {
+    lint {
         xmlReport = true
     }
 }
@@ -162,7 +158,7 @@ afterEvaluate {
                 val repositoryUsername: String? by project
                 val repositoryPassword: String? by project
 
-                url = uri(repositoryUrl)
+                setUrl(repositoryUrl)
                 credentials {
                     username = repositoryUsername ?: ""
                     password = repositoryPassword ?: ""
