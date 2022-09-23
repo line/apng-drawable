@@ -30,7 +30,7 @@ import java.io.InputStream
  * A class which holds APNG image information and bridge to the native(jni) layer.
  * When finished to use this class, you must explicitly call [recycle].
  */
-internal class Apng(
+class Apng(
     private val id: Int,
     /**
      * The width of the image

@@ -19,7 +19,7 @@ package com.linecorp.apng.decoder
 import android.graphics.Bitmap
 import java.io.InputStream
 
-internal object ApngDecoderJni {
+object ApngDecoderJni {
 
     init {
         System.loadLibrary("apng-drawable")
