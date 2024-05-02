@@ -18,6 +18,8 @@ package com.linecorp.apng
 
 import android.graphics.Canvas
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import com.linecorp.apng.decoder.Apng
 import com.linecorp.apng.utils.assertFailureMessage
 import com.nhaarman.mockitokotlin2.any
@@ -205,6 +207,29 @@ class ApngDrawableTest {
             eq(Rect(0, 0, 200, 100)),
             any()
         )
+    }
+
+    @Test
+    fun testDraw_withRegisterAnimationCallbackMultipleTimes() {
+        currentTimeProvider.currentTimeMillis = 0L
+
+        repeat (3) {
+            target.registerAnimationCallback(object : Animatable2Compat.AnimationCallback() {
+                override fun onAnimationEnd(drawable: Drawable?) {
+                    target.unregisterAnimationCallback(this)
+                }
+            })
+        }
+
+        target.start()
+
+        currentTimeProvider.currentTimeMillis = 10L
+
+        target.draw(canvas)
+
+        currentTimeProvider.currentTimeMillis = 1_000L
+
+        target.draw(canvas)
     }
 
     @Test
