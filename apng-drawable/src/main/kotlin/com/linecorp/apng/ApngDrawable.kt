@@ -324,7 +324,9 @@ class ApngDrawable @VisibleForTesting internal constructor(
                 isFirstLoop() &&
                 animationPrevDrawTimeMillisSnapShot == null
             ) {
-                animationCallbacks.forEach {
+                // Make a copy of the list for safe iteration
+                val callbacksCopy = animationCallbacks.toList()
+                callbacksCopy.forEach {
                     it.onAnimationStart(this)
                 }
             } else if (
@@ -332,7 +334,9 @@ class ApngDrawable @VisibleForTesting internal constructor(
                 hasNextLoop() &&
                 frameChanged
             ) {
-                repeatAnimationCallbacks.forEach {
+                // Make a copy of the list for safe iteration
+                val callbacksCopy = repeatAnimationCallbacks.toList()
+                callbacksCopy.forEach {
                     // TODO: Remove `onRepeat` invocation at the next version.
                     @Suppress("DEPRECATION")
                     it.onRepeat(this, currentLoopIndexInternal + 2)
@@ -342,7 +346,9 @@ class ApngDrawable @VisibleForTesting internal constructor(
         }
         if (exceedsRepeatCountLimitation()) {
             isStarted = false
-            animationCallbacks.forEach {
+            // Make a copy of the list for safe iteration
+            val callbacksCopy = animationCallbacks.toList()
+            callbacksCopy.forEach {
                 it.onAnimationEnd(this)
             }
         }
