@@ -132,13 +132,13 @@ class ApngDrawable @VisibleForTesting internal constructor(
      */
     val currentFrameIndex: Int
         get() {
-            var progressMillisInCurrentLoop = animationElapsedTimeMillis % durationMillis
+            var progressMillisInCurrentLoop = if (durationMillis == 0) 0 else animationElapsedTimeMillis % durationMillis
             progressMillisInCurrentLoop += if (exceedsRepeatCountLimitation()) durationMillis else 0
             return calculateCurrentFrameIndex(0, frameCount - 1, progressMillisInCurrentLoop)
         }
 
     private val currentLoopIndexInternal: Int
-        get() = (animationElapsedTimeMillis / durationMillis).toInt()
+        get() = if (durationMillis == 0) 0 else (animationElapsedTimeMillis / durationMillis).toInt()
     private val paint: Paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG)
     private val animationCallbacks: MutableList<Animatable2Compat.AnimationCallback> = arrayListOf()
     private val repeatAnimationCallbacks: MutableList<RepeatAnimationCallback> = arrayListOf()
