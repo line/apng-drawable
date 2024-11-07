@@ -28,6 +28,7 @@ android {
                 cppFlags += "-std=c++17"
                 cppFlags += "-fno-rtti"
                 cppFlags += "-fexceptions"
+                arguments += listOf("-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON")
             }
         }
     }
