@@ -15,7 +15,3 @@ allprojects {
 nexusStaging {
     packageGroup = ModuleConfig.groupId
 }
-
-tasks.create("clean", Delete::class.java) {
-    delete(rootProject.buildDir)
-}

@@ -17,7 +17,6 @@ android {
     defaultConfig {
         minSdk = Versions.minSdkVersion
         compileSdk = Versions.compileSdkVersion
-        targetSdk = Versions.targetSdkVersion
         version = ModuleConfig.version
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles(
