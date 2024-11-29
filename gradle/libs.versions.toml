@@ -1,19 +1,19 @@
 [versions]
 
 # https://github.com/JetBrains/kotlin/releases
-kotlin = "2.0.20"
+kotlin = "2.0.21"
 
 # https://developer.android.com/build/releases/gradle-plugin
-android-gradle-plugin = "8.7.0"
+android-gradle-plugin = "8.7.2"
 
 # https://github.com/JLLeitschuh/ktlint-gradle/releases
-ktlint-gradle = "10.0.0"
+ktlint-gradle = "12.1.2"
 
 # https://github.com/Kotlin/dokka/releases
-dokka = "1.5.30"
+dokka = "1.9.20"
 
 # https://github.com/ben-manes/gradle-versions-plugin/releases
-gradle-versions-plugin = "0.36.0"
+gradle-versions-plugin = "0.51.0"
 
 # https://github.com/Codearte/gradle-nexus-staging-plugin/releases
 nexus-staging = "0.22.0"

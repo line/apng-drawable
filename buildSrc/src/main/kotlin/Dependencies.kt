@@ -1,7 +1,4 @@
 object Versions {
-    // Language
-    const val kotlinVersion = "2.0.20"
-
     // Android
     const val minSdkVersion = 19
     const val compileSdkVersion = 34

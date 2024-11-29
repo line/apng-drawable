@@ -81,7 +81,6 @@ ktlint {
 }
 
 dependencies {
-    api(kotlin("stdlib-jdk7", Versions.kotlinVersion))
     api(libs.androidx.annotation)
     api(libs.androidx.animated.vectordrawable)
 

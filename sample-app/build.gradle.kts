@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.config.KotlinCompilerVersion
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -41,7 +39,6 @@ android {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.kotlinx.coroutines)
