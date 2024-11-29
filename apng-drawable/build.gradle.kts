@@ -100,20 +100,17 @@ dependencies {
     testImplementation(libs.mockito.kotlin)
 }
 
-val sourcesJarTask = tasks.create<Jar>("sourcesJar") {
-    archiveClassifier.set("sources")
-    from(android.sourceSets["main"].java.srcDirs)
-}
-
-val javadocJarTask = tasks.create<Jar>("javadocJar") {
+val javadocJar by tasks.registering(Jar::class) {
+    dependsOn(tasks.dokkaJavadoc)
+    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
     archiveClassifier.set("javadoc")
-    from(tasks.getByName("dokkaJavadoc"))
 }
 
 afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("apngDrawable") {
+                from(components["release"])
                 groupId = "com.linecorp"
                 artifactId = "apng"
                 version = libs.versions.apng.drawable.get()
@@ -150,9 +147,7 @@ afterEvaluate {
                     }
                 }
 
-                from(components["release"])
-                artifact(sourcesJarTask)
-                artifact(javadocJarTask)
+                artifact(javadocJar)
             }
         }
         repositories {
@@ -185,8 +180,4 @@ afterEvaluate {
         useInMemoryPgpKeys(signingKey, signingPassword)
         sign(publishing.publications["apngDrawable"])
     }
-}
-
-artifacts {
-    add("archives", sourcesJarTask)
 }
