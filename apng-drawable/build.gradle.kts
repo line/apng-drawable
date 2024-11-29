@@ -1,11 +1,11 @@
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    id("com.android.library")
-    id("kotlin-android")
-    id("org.jlleitschuh.gradle.ktlint") version Versions.ktlintGradleVersion
-    id("org.jetbrains.dokka") version Versions.dokkaVersion
-    id("com.github.ben-manes.versions") version Versions.gradleVersionsPluginVersion
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ktlint.gradle)
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.gradle.versions.plugin)
     `maven-publish`
     signing
 }
@@ -83,13 +83,13 @@ ktlint {
 
 dependencies {
     api(kotlin("stdlib-jdk7", Versions.kotlinVersion))
-    api(Libs.androidxAnnotation)
-    api(Libs.androidxVectorDrawable)
+    api(libs.androidx.annotation)
+    api(libs.androidx.animated.vectordrawable)
 
-    testImplementation(Libs.junit)
-    testImplementation(Libs.robolectric)
-    testImplementation(Libs.mockitoInline)
-    testImplementation(Libs.mockitoKotlin)
+    testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.mockito)
+    testImplementation(libs.mockito.kotlin)
 }
 
 val sourcesJarTask = tasks.create<Jar>("sourcesJar") {

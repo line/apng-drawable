@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -42,10 +42,10 @@ android {
 
 dependencies {
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
-    implementation(Libs.androidxAppcompat)
-    implementation(Libs.androidxConstraintLayout)
-    implementation(Libs.kotlinxCoroutines)
-    implementation(Libs.lichLifecycle)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.kotlinx.coroutines)
+    implementation(libs.lich.lifecycle)
 
     implementation(project(":apng-drawable"))
 }
