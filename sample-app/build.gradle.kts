@@ -6,6 +6,7 @@ plugins {
 android {
     compileSdk = libs.versions.build.compileSdk.get().toInt()
     defaultConfig {
+        namespace = "com.linecorp.apngsample"
         applicationId = "com.linecorp.apngsample"
         minSdk = libs.versions.build.minSdk.get().toInt()
         targetSdk = libs.versions.build.targetSdk.get().toInt()

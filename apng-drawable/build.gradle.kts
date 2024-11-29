@@ -15,6 +15,7 @@ version = libs.versions.apng.drawable.get()
 
 android {
     defaultConfig {
+        namespace = "com.linecorp.apng"
         minSdk = libs.versions.build.minSdk.get().toInt()
         compileSdk = libs.versions.build.compileSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
