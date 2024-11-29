@@ -3,7 +3,7 @@
 build-minSdk = "21"
 build-compileSdk = "34"
 build-targetSdk = "34"
-build-ndk = "27.0.11718014"
+build-ndk = "27.2.12479018"
 apng-drawable = "1.11.0"
 
 # https://github.com/JetBrains/kotlin/releases
