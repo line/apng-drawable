@@ -120,7 +120,10 @@ afterEvaluate {
                 pom {
                     packaging = "aar"
                     name.set("ApngDrawable")
-                    description.set("Fast and light weight Animated Portable Network Graphics(APNG) image decoder library for Android platform")
+                    description.set(
+                        "Fast and light weight Animated Portable Network Graphics(APNG) image" +
+                            " decoder library for Android platform"
+                    )
                     url.set("https://github.com/line/apng-drawable")
                     licenses {
                         license {
