@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private val animationCallback = object : AnimationCallbacks() {
-        override fun onAnimationStart(drawable: Drawable?) {
+        override fun onAnimationStart(drawable: Drawable) {
             Log.d("apng", "Animation start")
             binding.textCallback.text = "Animation started"
         }
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                 "nextLoopIndex: $nextLoopIndex"
         }
 
-        override fun onAnimationEnd(drawable: Drawable?) {
+        override fun onAnimationEnd(drawable: Drawable) {
             Log.d("apng", "Animation end")
             binding.textCallback.text = "Animation ended"
         }

@@ -12,13 +12,33 @@ trim_trailing_whitespace = true
 ij_continuation_indent_size = 8
 ij_smart_tabs = false
 
-[{*.kt, *.kts}]
+[*.{kt,kts}]
+# https://pinterest.github.io/ktlint/rules/configuration-ktlint/
+ktlint_code_style = android_studio
+
+# Disable the rules from the 'standard' rule set provided by KtLint
+ktlint_standard_discouraged-comment-location = disabled
+ktlint_standard_comment-wrapping = disabled
+ktlint_standard_property-naming = disabled
+ktlint_standard_class-naming = disabled
+ktlint_standard_trailing-comma-on-call-site = disabled
+ktlint_standard_trailing-comma-on-declaration-site = disabled
+ktlint_standard_no-semi = disabled
+
 ij_kotlin_code_style_defaults = KOTLIN_OFFICIAL
-continuation_indent_size = 4
-ij_continuation_indent_size = 4
+ij_kotlin_line_comment_at_first_column = false
+ij_kotlin_line_comment_add_space = true
+ij_kotlin_use_custom_formatting_for_modifiers = true
 ij_kotlin_name_count_to_use_star_import = 2147483647
 ij_kotlin_name_count_to_use_star_import_for_members = 2147483647
-disabled_rules = import-ordering
+ij_kotlin_keep_blank_lines_in_declarations = 1
+ij_kotlin_keep_blank_lines_in_code = 1
+ij_kotlin_keep_blank_lines_before_right_brace = 0
+ij_kotlin_align_multiline_parameters = false
+continuation_indent_size = 4
+ij_continuation_indent_size = 4
+ij_kotlin_import_nested_classes = false
+ij_kotlin_imports_layout = *, ^
 
 [{*.yml, *.yaml}]
 indent_size = 2

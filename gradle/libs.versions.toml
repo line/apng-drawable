@@ -1,0 +1,78 @@
+[versions]
+
+build-minSdk = "21"
+build-compileSdk = "34"
+build-targetSdk = "34"
+build-ndk = "27.2.12479018"
+apng-drawable = "1.12.0"
+
+# https://github.com/JetBrains/kotlin/releases
+kotlin = "2.0.21"
+
+# https://developer.android.com/build/releases/gradle-plugin
+android-gradle-plugin = "8.7.2"
+
+# https://github.com/JLLeitschuh/ktlint-gradle/releases
+ktlint-gradle = "12.1.2"
+
+# https://github.com/Kotlin/dokka/releases
+dokka = "1.9.20"
+
+# https://github.com/ben-manes/gradle-versions-plugin/releases
+gradle-versions-plugin = "0.51.0"
+
+# https://github.com/Codearte/gradle-nexus-staging-plugin/releases
+nexus-staging = "0.22.0"
+
+# https://developer.android.com/jetpack/androidx/releases/appcompat
+androidx-appcompat = "1.7.0"
+
+# https://developer.android.com/jetpack/androidx/releases/annotation
+androidx-annotation = "1.9.1"
+
+# https://developer.android.com/jetpack/androidx/releases/constraintlayout
+androidx-constraintlayout = "2.2.0"
+
+# https://developer.android.com/jetpack/androidx/releases/vectordrawable
+androidx-vectordrawable = "1.2.0"
+
+# https://github.com/Kotlin/kotlinx.coroutines/releases
+kotlinx-coroutines = "1.8.1"
+
+# https://github.com/line/lich/releases
+lich-lifecycle = "1.7.0"
+
+# https://github.com/junit-team/junit4/releases
+junit = "4.13.2"
+
+# https://github.com/robolectric/robolectric/releases
+roboletric = "4.12.2"
+
+# https://github.com/mockito/mockito/releases
+mockito = "5.14.2"
+
+# https://github.com/mockito/mockito-kotlin/releases
+mockito-kotlin = "5.4.0"
+
+[libraries]
+
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "androidx-annotation" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
+androidx-animated-vectordrawable = { group = "androidx.vectordrawable", name = "vectordrawable-animated", version.ref = "androidx-vectordrawable" }
+kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+lich-lifecycle = { group = "com.linecorp.lich", name = "lifecycle", version.ref = "lich-lifecycle" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "roboletric" }
+mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito-kotlin" }
+
+[plugins]
+
+android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
+android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+nexus-staging = { id = "io.codearte.nexus-staging", version.ref = "nexus-staging" }
+ktlint-gradle = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+gradle-versions-plugin = { id = "com.github.ben-manes.versions", version.ref = "gradle-versions-plugin" }

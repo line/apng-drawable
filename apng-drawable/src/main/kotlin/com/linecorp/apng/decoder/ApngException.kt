@@ -51,35 +51,43 @@ class ApngException internal constructor(
          * When an error occurs in [java.io.InputStream.read].
          */
         ERR_STREAM_READ_FAIL(-100),
+
         /**
          * When EOF came before reading the required size in [java.io.InputStream.read].
          */
         ERR_UNEXPECTED_EOF(-101),
+
         /**
          * When an image was not in APNG format.
          */
         ERR_INVALID_FILE_FORMAT(-102),
+
         /**
          * When using an image that has not yet been decoded or deleted.
          */
         ERR_NOT_EXIST_IMAGE(-103),
+
         /**
          * When using a frame outside the range of this image.
          */
         ERR_FRAME_INDEX_OUT_OF_RANGE(-104),
+
         /**
          * When memory can not be allocated.
          */
         ERR_OUT_OF_MEMORY(-105),
+
         /**
          * When an error occurs in the operation to the [android.graphics.Bitmap].
          */
         ERR_BITMAP_OPERATION(-106),
+
         /**
          * When an image is not supported APNG image.
          * Example: tries to load non-4 channel image.(Currently, supported 4 channel image only.)
          */
         ERR_UNSUPPORTED_TYPE(-107),
+
         /**
          * When there is an inner exception.
          */

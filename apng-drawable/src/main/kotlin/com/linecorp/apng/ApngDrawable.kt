@@ -132,13 +132,18 @@ class ApngDrawable @VisibleForTesting internal constructor(
      */
     val currentFrameIndex: Int
         get() {
-            var progressMillisInCurrentLoop = if (durationMillis == 0) 0 else animationElapsedTimeMillis % durationMillis
+            var progressMillisInCurrentLoop =
+                if (durationMillis == 0) 0 else animationElapsedTimeMillis % durationMillis
             progressMillisInCurrentLoop += if (exceedsRepeatCountLimitation()) durationMillis else 0
             return calculateCurrentFrameIndex(0, frameCount - 1, progressMillisInCurrentLoop)
         }
 
     private val currentLoopIndexInternal: Int
-        get() = if (durationMillis == 0) 0 else (animationElapsedTimeMillis / durationMillis).toInt()
+        get() = if (durationMillis == 0) {
+            0
+        } else {
+            (animationElapsedTimeMillis / durationMillis).toInt()
+        }
     private val paint: Paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG)
     private val animationCallbacks: MutableList<Animatable2Compat.AnimationCallback> = arrayListOf()
     private val repeatAnimationCallbacks: MutableList<RepeatAnimationCallback> = arrayListOf()
@@ -237,9 +242,8 @@ class ApngDrawable @VisibleForTesting internal constructor(
         repeatAnimationCallbacks.add(repeatCallback)
     }
 
-    fun unregisterRepeatAnimationCallback(
-        repeatCallback: RepeatAnimationCallback
-    ): Boolean = repeatAnimationCallbacks.remove(repeatCallback)
+    fun unregisterRepeatAnimationCallback(repeatCallback: RepeatAnimationCallback): Boolean =
+        repeatAnimationCallbacks.remove(repeatCallback)
 
     override fun clearAnimationCallbacks() = animationCallbacks.clear()
 
@@ -542,11 +546,8 @@ class ApngDrawable @VisibleForTesting internal constructor(
          */
         @WorkerThread
         @Throws(ApngException::class, FileNotFoundException::class, IOException::class)
-        fun decode(
-            filePath: String,
-            width: Int? = null,
-            height: Int? = null
-        ): ApngDrawable = decode(File(filePath), width, height)
+        fun decode(filePath: String, width: Int? = null, height: Int? = null): ApngDrawable =
+            decode(File(filePath), width, height)
 
         /**
          * Creates [ApngDrawable] from given [file].
@@ -565,11 +566,8 @@ class ApngDrawable @VisibleForTesting internal constructor(
          */
         @WorkerThread
         @Throws(ApngException::class, FileNotFoundException::class, IOException::class)
-        fun decode(
-            file: File,
-            width: Int? = null,
-            height: Int? = null
-        ): ApngDrawable = file.inputStream().buffered().use { decode(it, width, height) }
+        fun decode(file: File, width: Int? = null, height: Int? = null): ApngDrawable =
+            file.inputStream().buffered().use { decode(it, width, height) }
 
         /**
          * Creates [ApngDrawable] from given [stream].

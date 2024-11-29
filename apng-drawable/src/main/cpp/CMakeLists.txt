@@ -23,6 +23,7 @@ set(png_headers
         ${png_source_dir}/arm/arm_init.c
         ${png_source_dir}/arm/filter_neon.S
         ${png_source_dir}/arm/filter_neon_intrinsics.c
+        ${png_source_dir}/arm/palette_neon_intrinsics.c
         ${png_source_dir}/png.c
         ${png_source_dir}/pngerror.c
         ${png_source_dir}/pngget.c

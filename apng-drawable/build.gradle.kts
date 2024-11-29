@@ -1,24 +1,23 @@
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    id("com.android.library")
-    id("kotlin-android")
-    id("org.jlleitschuh.gradle.ktlint") version Versions.ktlintGradleVersion
-    id("org.jetbrains.dokka") version Versions.dokkaVersion
-    id("com.github.ben-manes.versions") version Versions.gradleVersionsPluginVersion
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ktlint.gradle)
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.gradle.versions.plugin)
     `maven-publish`
     signing
 }
 
-group = ModuleConfig.groupId
-version = ModuleConfig.version
+group = "com.linecorp"
+version = libs.versions.apng.drawable.get()
 
 android {
     defaultConfig {
-        minSdk = Versions.minSdkVersion
-        compileSdk = Versions.compileSdkVersion
-        targetSdk = Versions.targetSdkVersion
-        version = ModuleConfig.version
+        namespace = "com.linecorp.apng"
+        minSdk = libs.versions.build.minSdk.get().toInt()
+        compileSdk = libs.versions.build.compileSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles(
             file("proguard-rules.pro")
@@ -63,11 +62,21 @@ android {
             }
         }
     }
-    ndkVersion = Versions.ndkVersion
+    ndkVersion = libs.versions.build.ndk.get()
     externalNativeBuild {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
         }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11.toString()
+    }
+    buildFeatures {
+        buildConfig = true
     }
     lint {
         xmlReport = true
@@ -82,14 +91,13 @@ ktlint {
 }
 
 dependencies {
-    api(kotlin("stdlib-jdk7", Versions.kotlinVersion))
-    api(Libs.androidxAnnotation)
-    api(Libs.androidxVectorDrawable)
+    api(libs.androidx.annotation)
+    api(libs.androidx.animated.vectordrawable)
 
-    testImplementation(Libs.junit)
-    testImplementation(Libs.robolectric)
-    testImplementation(Libs.mockitoInline)
-    testImplementation(Libs.mockitoKotlin)
+    testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.mockito)
+    testImplementation(libs.mockito.kotlin)
 }
 
 val sourcesJarTask = tasks.create<Jar>("sourcesJar") {
@@ -106,14 +114,17 @@ afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("apngDrawable") {
-                groupId = ModuleConfig.groupId
-                artifactId = ModuleConfig.artifactId
-                version = ModuleConfig.version
+                groupId = "com.linecorp"
+                artifactId = "apng"
+                version = libs.versions.apng.drawable.get()
                 pom {
                     packaging = "aar"
-                    name.set(ModuleConfig.name)
-                    description.set(ModuleConfig.description)
-                    url.set(ModuleConfig.siteUrl)
+                    name.set("ApngDrawable")
+                    description.set(
+                        "Fast and light weight Animated Portable Network Graphics(APNG) image" +
+                            " decoder library for Android platform"
+                    )
+                    url.set("https://github.com/line/apng-drawable")
                     licenses {
                         license {
                             name.set("The Apache License, Version 2.0")
@@ -129,13 +140,13 @@ afterEvaluate {
                         }
                     }
                     scm {
-                        connection.set(ModuleConfig.scmConnectionUrl)
-                        developerConnection.set(ModuleConfig.scmDeveloperConnectionUrl)
-                        url.set(ModuleConfig.scmUrl)
+                        connection.set("scm:git:git://github.com/line/apng-drawable.git")
+                        developerConnection.set("scm:git:ssh://github.com:line/apng-drawable.git")
+                        url.set("https://github.com/line/apng-drawable/tree/master")
                     }
                     issueManagement {
                         system.set("GitHub")
-                        url.set(ModuleConfig.issueTrackerUrl)
+                        url.set("https://github.com/line/apng-drawable/issues")
                     }
                 }
 
@@ -151,7 +162,7 @@ afterEvaluate {
                     "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
                 val snapshotRepositoryUrl =
                     "https://oss.sonatype.org/content/repositories/snapshots/"
-                val repositoryUrl = if (ModuleConfig.version.endsWith("SNAPSHOT")) {
+                val repositoryUrl = if (libs.versions.apng.drawable.get().endsWith("SNAPSHOT")) {
                     snapshotRepositoryUrl
                 } else {
                     releaseRepositoryUrl

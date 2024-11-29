@@ -1,21 +1,17 @@
 plugins {
-    id("com.android.application") version Versions.androidPluginVersion apply false
-    id("com.android.library") version Versions.androidPluginVersion apply false
-    id("kotlin-android") version Versions.kotlinVersion apply false
-    id("io.codearte.nexus-staging") version Versions.nexusStagingVersion
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.nexus.staging)
 }
 
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 
 nexusStaging {
-    packageGroup = ModuleConfig.groupId
-}
-
-tasks.create("clean", Delete::class.java) {
-    delete(rootProject.buildDir)
+    packageGroup = "com.linecorp"
 }

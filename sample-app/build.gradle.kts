@@ -1,22 +1,17 @@
-import org.jetbrains.kotlin.config.KotlinCompilerVersion
-
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
-    compileSdkVersion(Versions.compileSdkVersion)
+    compileSdk = libs.versions.build.compileSdk.get().toInt()
     defaultConfig {
+        namespace = "com.linecorp.apngsample"
         applicationId = "com.linecorp.apngsample"
-        minSdkVersion(Versions.minSdkVersion)
-        targetSdkVersion(Versions.targetSdkVersion)
+        minSdk = libs.versions.build.minSdk.get().toInt()
+        targetSdk = libs.versions.build.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
-        missingDimensionStrategy("env", "androidx")
-    }
-    sourceSets {
-        getByName("main").java.srcDirs("src/main/kotlin")
     }
     buildTypes {
         debug {
@@ -30,10 +25,22 @@ android {
             )
         }
     }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11.toString()
+    }
     buildFeatures {
         viewBinding = true
     }
-    packagingOptions {
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
+    packaging {
         jniLibs {
             useLegacyPackaging = true
         }
@@ -41,11 +48,10 @@ android {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
-    implementation(Libs.androidxAppcompat)
-    implementation(Libs.androidxConstraintLayout)
-    implementation(Libs.kotlinxCoroutines)
-    implementation(Libs.lichLifecycle)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.kotlinx.coroutines)
+    implementation(libs.lich.lifecycle)
 
     implementation(project(":apng-drawable"))
 }

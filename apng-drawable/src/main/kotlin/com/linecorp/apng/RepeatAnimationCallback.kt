@@ -12,10 +12,7 @@ interface RepeatAnimationCallback {
         message = "Use onAnimationRepeat",
         replaceWith = ReplaceWith("")
     )
-    fun onRepeat(
-        drawable: ApngDrawable,
-        nextLoop: Int
-    ) = Unit
+    fun onRepeat(drawable: ApngDrawable, nextLoop: Int) = Unit
 
     /**
      * This is called when animation is about to be repeated.
@@ -26,8 +23,5 @@ interface RepeatAnimationCallback {
      * @param [nextLoopIndex] loop index of the next animation. e.g. If [nextLoopIndex] equals to
      *  `[ApngDrawable.loopCount] - 1`, the last loop will be started.
      */
-    fun onAnimationRepeat(
-        drawable: ApngDrawable,
-        nextLoopIndex: Int
-    ) = Unit
+    fun onAnimationRepeat(drawable: ApngDrawable, nextLoopIndex: Int) = Unit
 }
