@@ -1,9 +1,9 @@
 object Versions {
     // Language
-    const val kotlinVersion = "1.5.30"
+    const val kotlinVersion = "2.0.20"
 
     // Plugin
-    const val androidPluginVersion = "7.0.1"
+    const val androidPluginVersion = "8.7.0"
     const val ktlintGradleVersion = "10.0.0"
     const val dokkaVersion = "1.5.30"
     const val gradleVersionsPluginVersion = "0.36.0"
@@ -11,8 +11,8 @@ object Versions {
 
     // Android
     const val minSdkVersion = 19
-    const val compileSdkVersion = 30
-    const val targetSdkVersion = 30
+    const val compileSdkVersion = 34
+    const val targetSdkVersion = 34
     const val ndkVersion = "27.0.11718014"
 
     // Library

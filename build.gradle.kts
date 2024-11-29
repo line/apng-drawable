@@ -8,7 +8,7 @@ plugins {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 
