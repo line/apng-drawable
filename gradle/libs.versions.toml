@@ -1,5 +1,11 @@
 [versions]
 
+build-minSdk = "19"
+build-compileSdk = "34"
+build-targetSdk = "34"
+build-ndk = "27.0.11718014"
+apng-drawable = "1.11.0"
+
 # https://github.com/JetBrains/kotlin/releases
 kotlin = "2.0.21"
 

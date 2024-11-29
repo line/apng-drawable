@@ -13,5 +13,5 @@ allprojects {
 }
 
 nexusStaging {
-    packageGroup = ModuleConfig.groupId
+    packageGroup = "com.linecorp"
 }

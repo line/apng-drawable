@@ -10,14 +10,13 @@ plugins {
     signing
 }
 
-group = ModuleConfig.groupId
-version = ModuleConfig.version
+group = "com.linecorp"
+version = libs.versions.apng.drawable.get()
 
 android {
     defaultConfig {
-        minSdk = Versions.minSdkVersion
-        compileSdk = Versions.compileSdkVersion
-        version = ModuleConfig.version
+        minSdk = libs.versions.build.minSdk.get().toInt()
+        compileSdk = libs.versions.build.compileSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles(
             file("proguard-rules.pro")
@@ -62,7 +61,7 @@ android {
             }
         }
     }
-    ndkVersion = Versions.ndkVersion
+    ndkVersion = libs.versions.build.ndk.get()
     externalNativeBuild {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
@@ -104,14 +103,14 @@ afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("apngDrawable") {
-                groupId = ModuleConfig.groupId
-                artifactId = ModuleConfig.artifactId
-                version = ModuleConfig.version
+                groupId = "com.linecorp"
+                artifactId = "apng"
+                version = libs.versions.apng.drawable.get()
                 pom {
                     packaging = "aar"
-                    name.set(ModuleConfig.name)
-                    description.set(ModuleConfig.description)
-                    url.set(ModuleConfig.siteUrl)
+                    name.set("ApngDrawable")
+                    description.set("Fast and light weight Animated Portable Network Graphics(APNG) image decoder library for Android platform")
+                    url.set("https://github.com/line/apng-drawable")
                     licenses {
                         license {
                             name.set("The Apache License, Version 2.0")
@@ -127,13 +126,13 @@ afterEvaluate {
                         }
                     }
                     scm {
-                        connection.set(ModuleConfig.scmConnectionUrl)
-                        developerConnection.set(ModuleConfig.scmDeveloperConnectionUrl)
-                        url.set(ModuleConfig.scmUrl)
+                        connection.set("scm:git:git://github.com/line/apng-drawable.git")
+                        developerConnection.set("scm:git:ssh://github.com:line/apng-drawable.git")
+                        url.set("https://github.com/line/apng-drawable/tree/master")
                     }
                     issueManagement {
                         system.set("GitHub")
-                        url.set(ModuleConfig.issueTrackerUrl)
+                        url.set("https://github.com/line/apng-drawable/issues")
                     }
                 }
 
@@ -149,7 +148,7 @@ afterEvaluate {
                     "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
                 val snapshotRepositoryUrl =
                     "https://oss.sonatype.org/content/repositories/snapshots/"
-                val repositoryUrl = if (ModuleConfig.version.endsWith("SNAPSHOT")) {
+                val repositoryUrl = if (libs.versions.apng.drawable.get().endsWith("SNAPSHOT")) {
                     snapshotRepositoryUrl
                 } else {
                     releaseRepositoryUrl

@@ -4,17 +4,13 @@ plugins {
 }
 
 android {
-    compileSdk = Versions.compileSdkVersion
+    compileSdk = libs.versions.build.compileSdk.get().toInt()
     defaultConfig {
         applicationId = "com.linecorp.apngsample"
-        minSdk = Versions.minSdkVersion
-        targetSdk = Versions.targetSdkVersion
+        minSdk = libs.versions.build.minSdk.get().toInt()
+        targetSdk = libs.versions.build.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
-        missingDimensionStrategy("env", "androidx")
-    }
-    sourceSets {
-        getByName("main").java.srcDirs("src/main/kotlin")
     }
     buildTypes {
         debug {
@@ -31,7 +27,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
-    packagingOptions {
+    packaging {
         jniLibs {
             useLegacyPackaging = true
         }
