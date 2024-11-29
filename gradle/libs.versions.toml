@@ -46,13 +46,13 @@ lich-lifecycle = "1.7.0"
 junit = "4.13.2"
 
 # https://github.com/robolectric/robolectric/releases
-roboletric = "4.5.1"
+roboletric = "4.12.2"
 
 # https://github.com/mockito/mockito/releases
-mockito = "3.7.7"
+mockito = "5.14.2"
 
 # https://github.com/mockito/mockito-kotlin/releases
-mockito-kotlin = "2.1.0"
+mockito-kotlin = "5.4.0"
 
 [libraries]
 
@@ -65,7 +65,7 @@ lich-lifecycle = { group = "com.linecorp.lich", name = "lifecycle", version.ref 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "roboletric" }
 mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
-mockito-kotlin = { group = "com.nhaarman.mockitokotlin2", name = "mockito-kotlin", version.ref = "mockito-kotlin" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito-kotlin" }
 
 [plugins]
 
