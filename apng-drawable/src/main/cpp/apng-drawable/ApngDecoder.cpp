@@ -217,8 +217,6 @@ std::unique_ptr<ApngImage> ApngDecoder::decode(
   }
   for (uint32_t j = 0; j < height; j++) {
     rows_frame[j] = p_frame.get() + j * row_bytes;
-  }
-  for (uint32_t j = 0; j < height; j++) {
     rows_buffer[j] = p_buffer.get() + j * row_bytes;
   }
 
