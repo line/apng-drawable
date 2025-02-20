@@ -10,6 +10,7 @@
     <string name="load_10x">Load (10x)</string>
     <string name="mutate">Mutate</string>
     <string name="copy">Copy</string>
+    <string name="remove">Remove</string>
     <string name="commands">Commands</string>
     <string name="use_inputstream">Use InputStream</string>
     <string name="normal_png">Normal PNG</string>
