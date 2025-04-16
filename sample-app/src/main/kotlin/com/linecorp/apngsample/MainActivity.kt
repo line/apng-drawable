@@ -88,6 +88,7 @@ class MainActivity : AppCompatActivity() {
         binding.buttonSeekStart.setOnClickListener { seekTo(0L) }
         binding.buttonSeekEnd.setOnClickListener { seekTo(10000000L) }
         binding.buttonSaveCurrentFrame.setOnClickListener { exportCurrentFrame() }
+        binding.buttonRemove.setOnClickListener { removeView() }
     }
 
     @SuppressLint("SetTextI18n")
@@ -194,6 +195,14 @@ class MainActivity : AppCompatActivity() {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
         }
         return@withContext uri
+    }
+
+    // Tests whether removing the view will release the memory
+    private fun removeView() {
+        binding.imageView.setImageDrawable(null)
+        drawable?.clearAnimationCallbacks()
+        drawable?.recycle()
+        drawable = null
     }
 
     private abstract class AnimationCallbacks
