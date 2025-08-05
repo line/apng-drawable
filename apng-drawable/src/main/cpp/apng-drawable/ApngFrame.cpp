@@ -19,9 +19,9 @@
 namespace apng_drawable {
 
 ApngFrame::ApngFrame(
-    size_t frameByteCount,
+    size_t pixelCount,
     size_t duration
 ) : mDuration(duration) {
-  mPixels = std::make_unique<uint32_t[]>(frameByteCount);
+  mPixels = std::make_unique<uint32_t[]>(pixelCount);
 }
 }

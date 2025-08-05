@@ -287,8 +287,8 @@ std::unique_ptr<ApngImage> ApngDecoder::decode(
         result = ERR_INVALID_FILE_FORMAT;
         return nullptr;
     }
-    size_t frameBytesAsUint32 = height * width; // The frame expects the pixels to be a uint32_t array, so we don't need to multiply by 4
-    std::unique_ptr<ApngFrame> frame(new ApngFrame(frameBytesAsUint32, duration));
+    size_t pixelCount = height * width; // The frame expects the pixels to be a uint32_t array, so we don't need to multiply by 4
+    std::unique_ptr<ApngFrame> frame(new ApngFrame(pixelCount, duration));
     if (i == first) {
       blend_op = PNG_BLEND_OP_SOURCE;
       if (dispose_op == PNG_DISPOSE_OP_PREVIOUS) {
