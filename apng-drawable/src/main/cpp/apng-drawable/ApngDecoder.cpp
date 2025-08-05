@@ -281,8 +281,14 @@ std::unique_ptr<ApngImage> ApngDecoder::decode(
                             &blend_op);
     auto duration =
         static_cast<size_t>(std::lround(static_cast<float>(delay_num) / delay_den * 1000.F));
-    size_t frameBytesAsUint32 = height * width; // The frame expects the pixels to be a uint32_t array, so we don't need to multiply by 4
-    std::unique_ptr<ApngFrame> frame(new ApngFrame(frameBytesAsUint32, duration));
+    // Check unsigned integer wrapping by `height * width`.
+    if (height > SIZE_MAX / width) {
+        png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+        result = ERR_INVALID_FILE_FORMAT;
+        return nullptr;
+    }
+    size_t pixelCount = height * width; // The frame expects the pixels to be a uint32_t array, so we don't need to multiply by 4
+    std::unique_ptr<ApngFrame> frame(new ApngFrame(pixelCount, duration));
     if (i == first) {
       blend_op = PNG_BLEND_OP_SOURCE;
       if (dispose_op == PNG_DISPOSE_OP_PREVIOUS) {

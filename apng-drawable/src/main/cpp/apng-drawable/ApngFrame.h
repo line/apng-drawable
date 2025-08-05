@@ -22,7 +22,7 @@ namespace apng_drawable {
 
 class ApngFrame {
  public:
-  ApngFrame(size_t frameByteCount, size_t duration);
+  ApngFrame(size_t pixelCount, size_t duration);
   ApngFrame() = delete;
 
   uint32_t *getRawPixels() const { return mPixels.get(); }
